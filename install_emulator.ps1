@@ -6,9 +6,9 @@
 
 Param(
     [Parameter(Mandatory=$true)]
-    [string]$androidSdkArchive;
+    [string]$androidSdkArchive,
     [Parameter(Mandatory=$true)]
-    [string]$androidEmulatorArchive;
+    [string]$androidEmulatorArchive
 )
 
 $ErrorActionPreference = "Stop"
@@ -25,10 +25,7 @@ if (!(check_elevated) ){
 
 function install_sdk_packages() {
     $sdkPackagesFile = "$scriptLocation\sdk_packages.txt"
-    if (! (test-path $sdkPackagesFile)) {
-        throw ("Could not find SDK packages file. Expecting " +
-               "to find it at $sdkPackagesFile")
-    }
+    check_path $sdkPackagesFile
 
     gc $sdkPackagesFile | `
         % {$_.Trim() } | `
@@ -39,11 +36,15 @@ function install_sdk_packages() {
 function check_prerequisites() {
     log_message "Checking prerequisites."
     $requiredFiles = @($androidSdkArchive, $androidEmulatorArchive)
-    foreach($file in $requiredFiles) {
-        check_path $file
-    }
+    $requiredFiles | % { check_path $_ }
 
     check_windows_feature "HypervisorPlatform"
+
+    $javaHome = $env:JAVA_HOME
+    if (!($javaHome)) {
+        throw "JAVA_HOME is not set. Please install JRE/JDK 8."
+    }
+    check_path $JAVA_HOME
 }
 
 check_prerequisites
