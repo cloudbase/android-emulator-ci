@@ -1,8 +1,7 @@
 # Requirements
 # - Android sdk archive
 # - Android emulator archive
-# - tar (msys provides it. Apparently, Windows 10 includes tarbsd,
-#        but it won't work with msys's bzip2.)
+# - msys
 # - jre 1.8 (1.10 doesn't work)
 
 Param(
@@ -36,29 +35,35 @@ function check_prerequisites() {
     if (!($javaHome)) {
         throw "JAVA_HOME is not set. Please install JRE/JDK 8."
     }
-    check_path $JAVA_HOME
+
+    check_path $env:JAVA_HOME
     check_path $msysBinDir
 }
 
 function extract_sdk_archive() {
-    if ($androidEmulatorArchive -notmatch "\.zip$") {
-        throw "The SDK archive is expected to be a .zip."
+    if ($androidSdkArchive -notmatch "\.zip$") {
+        throw ("The SDK archive is expected to be a .zip. " +
+               "Was given: `"$androidSdkArchive`".")
     }
     extract_zip $androidSdkArchive $androidSdkRoot
 }
 
 function extract_emulator_archive() {
     # We're first removing the existing emulator dir. 
-    check_create_dir $androidEmulatorDir
+    ensure_dir_empty $androidEmulatorDir
     # The archive is expected to contain a single top dir which includes the
     # emulator files.
 
-    if ($androidEmulatorArchive -notmatch "\.tar\.[a-z]+$") {
-        throw "The emulator archive is expected to be .tar.*."
+    if ($androidEmulatorArchive -notmatch "\.tar\.[a-z0-9]+$") {
+        throw "The emulator archive is expected to be .tar.*. " +
+              "Was given: `"$androidEmulatorArchive`"."
     }
 
-    tar xf $androidEmulatorArchive -C $androidEmulatorDir.Replace("\", "/") `
-        --strip-components 1
+    log_message ("Extracting emulator archive: `"$androidEmulatorArchive`' " +
+                 "-> `"$androidEmulatorHome`".")
+    tar_msys xf (convert_to_msys_path $androidEmulatorArchive) `
+           -C (convert_to_msys_path $androidEmulatorDir) `
+           --strip-components 1
 }
 
 
@@ -74,12 +79,18 @@ function install_sdk_packages() {
 
 check_prerequisites
 
-set_env "ANDROID_SDK_ROOT" $androidSdkRoot
-set_env "ANDROID_EMULATOR_HOME" $androidEmulatorHome
-
 if (!($skipCleanup)){
     . "$scriptLocation\remove_emulator.ps1"
 }
+
+set_env "ANDROID_SDK_ROOT" $androidSdkRoot
+set_env "ANDROID_EMULATOR_HOME" $androidEmulatorHome
+
+ensure_dir_exists $androidRootDir
+ensure_dir_exists $androidEmulatorHome
+
+extract_sdk_archive
+extract_emulator_archive
 
 # Some of the SDK tools may ignore the environment variable or explicitly
 # specified paths, and still use this one. For this reason, we'll ensure

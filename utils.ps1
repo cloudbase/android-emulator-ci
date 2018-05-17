@@ -19,8 +19,8 @@ function _set_env($key, $val, $target="User") {
 }
 
 function set_env($key, $val, $target="User") {
-    log_message "Setting environment value: `"$key`" = `"$val`". " +
-                "Target: `"$target`"."
+    log_message ("Setting environment value: `"$key`" = `"$val`". " +
+                 "Target: `"$target`".")
 	_set_env $key $val $target
 	# You'll always want to set the "Process" target as well, so that
 	# it applies to the current process. Just to avoid some weird issues,
@@ -49,8 +49,8 @@ function create_avd($avdName, $packageName, $avdDevice, $abi, $path) {
         $path = join-path $AndroidAvdDir $avdName
     }
 
-    log_message "Creating avd: $avdName - $packageName - " +
-                "$avdDevice - $abi - $path"
+    log_message ("Creating avd: $avdName - $packageName - " +
+                 "$avdDevice - $abi - $path")
     & $avdManager create avd `
         --name $avdName `
         --package $packageName `
@@ -96,8 +96,8 @@ function delete_symlink($link) {
 }
 
 function ensure_symlink($target, $link, $isDir) {
-    log_message "Ensuring symlink exists: $link -> $target. " +
-                "Directory: $isDir"
+    log_message ("Ensuring symlink exists: $link -> $target. " +
+                 "Directory: $isDir")
 
     if ((get_full_path $target) -eq (get_full_path $link)) {
         log_message "$target IS $link. Skipping creating a symlink."
@@ -184,10 +184,25 @@ function ensure_binary_available($bin) {
     }
 }
 
-function check_create_dir($path)
-{
+function ensure_dir_exists($path) {
+    if (!(test-path $path)) {
+        mkdir $path | out-null
+    }
+}
+
+function ensure_dir_empty($path) {
+    # Ensure that the specified dir exists and is empty.
     if (test-path $path) {
         log_message "Directory already exists. Cleaning it up: `"$path`"."
+        rm -recurse -force $path
+    }
+    mkdir $path | out-null
+}
+
+function check_remove_dir($path) {
+    # Ensure that the specified dir exists and is empty.
+    if (test-path $path) {
+        log_message "Removing dir: `"$path`"."
         rm -recurse -force $path
     }
 }
@@ -196,5 +211,35 @@ function extract_zip($src, $dest) {
     # Make sure to use full paths.
     Add-Type -AssemblyName System.IO.Compression.FileSystem
 
+    log_message "Extracting zip: `"$src`" -> `"$dest`"."
     [System.IO.Compression.ZipFile]::ExtractToDirectory($src, $dest)
+}
+
+function tar_msys() {
+    # We're doing some plumbing to get tar working properly without
+    # messing with PATH. This probably means that this can't be piped.
+    #
+    # msys provides tar. Apparently, Windows 10 includes tarbsd as well,
+    # but it won't work with msys' bzip2. We don't want to add
+    # the msys' bin dir to PATH "globally", as that will break other
+    # binaries, e.g. "cmd".
+
+    $pathBackup = "$($env:PATH)"
+    $env:PATH ="$msysBinDir;$($env:PATH)"
+
+    try {
+        tar.exe @args
+        if ($LASTEXITCODE) {
+            throw "Command failed: tar $args"
+        }
+    }
+    finally {
+        $env:PATH = $pathBackup
+    }
+}
+
+function convert_to_msys_path($path) {
+    # We'll need posix paths.
+    # c:\test\abcd becomes /c/test/abcd
+    return ($path -replace "^([a-z]):\\",'/$1/') -replace "\\", "/"
 }

@@ -12,10 +12,10 @@ function stop_emulator() {
 }
 
 function cleanup_files() {
-    log_message "Removing emulator files: $androidRootDir."
+    log_message "Removing emulator files: `"$androidRootDir`"."
     # For now, we'll delete the Android root dir completely,
     # assuming that all the related files reside there.
-    rmdir -recurse -force $androidRootDir
+    check_remove_dir $androidRootDir
     if (test-path $androidEmulatorHome) {
         $linkTarget = get_link_target $androidEmulatorHome
         if ($linkTarget) {
@@ -27,3 +27,5 @@ function cleanup_files() {
 
 stop_emulator
 cleanup_files
+
+log_message "Cleaned up emulator."

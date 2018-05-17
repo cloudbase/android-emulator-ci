@@ -25,4 +25,3 @@ $testAvdAbi = "google_apis/x86"
 # For now, we'll just hardcode it. Make msys is installed
 # at this location.
 $msysBinDir = join-path $env:HOMEDRIVE "msys\1.0\bin"
-$env:PATH ="$msysBinDir;$($env:PATH)"
