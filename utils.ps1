@@ -41,7 +41,7 @@ function install_android_sdk_package($packageName) {
     # This command requires confirmation (unfortunately, there's no
     # argument that allows bypassing this)
     log_message "Installing Android SDK package: `"$packageName`""
-    echo "y" | & $sdkManager "$packageName"
+    & $sdkManager "$packageName"
 }
 
 function accept_sdk_licenses() {

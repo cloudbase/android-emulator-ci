@@ -85,6 +85,7 @@ if (!($skipCleanup)){
 
 set_env "ANDROID_SDK_ROOT" $androidSdkRoot
 set_env "ANDROID_EMULATOR_HOME" $androidEmulatorHome
+set_env "ANDROID_EMULATOR_LAUNCHER_DIR" $androidEmulatorDir
 
 ensure_dir_exists $androidRootDir
 ensure_dir_exists $androidEmulatorHome
