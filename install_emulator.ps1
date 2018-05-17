@@ -74,6 +74,7 @@ function install_sdk_packages() {
     gc $sdkPackagesFile | `
         % {$_.Trim() } | `
         ? { -not $_.StartsWith("#") } | `
+        ? {$_} | `
         % {install_android_sdk_package $_}
 }
 
