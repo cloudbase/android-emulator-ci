@@ -4,6 +4,13 @@
 # - 7-zip
 # - jre 1.8 (1.10 doesn't work)
 
+Param(
+    [Parameter(Mandatory=$true)]
+    [string]$androidSdkArchive;
+    [Parameter(Mandatory=$true)]
+    [string]$androidEmulatorArchive;
+)
+
 $ErrorActionPreference = "Stop"
 
 $scriptLocation = [System.IO.Path]::GetDirectoryName(
@@ -16,15 +23,11 @@ if (!(check_elevated) ){
     throw "This script requires elevated privileges."
 }
 
-set_env "ANDROID_SDK_ROOT" $androidSdkRoot
-set_env "ANDROID_EMULATOR_HOME" $androidEmulatorHome
-
 function install_sdk_packages() {
     $sdkPackagesFile = "$scriptLocation\sdk_packages.txt"
     if (! (test-path $sdkPackagesFile)) {
-        $err = "Could not find SDK packages file. Expecting " +
-               "to find it at $sdkPackagesFile"
-        throw $err
+        throw ("Could not find SDK packages file. Expecting " +
+               "to find it at $sdkPackagesFile")
     }
 
     gc $sdkPackagesFile | `
@@ -32,6 +35,21 @@ function install_sdk_packages() {
         ? { -not $_.StartsWith("#") } | `
         % {install_android_sdk_package $_}
 }
+
+function check_prerequisites() {
+    log_message "Checking prerequisites."
+    $requiredFiles = @($androidSdkArchive, $androidEmulatorArchive)
+    foreach($file in $requiredFiles) {
+        check_path $file
+    }
+
+    check_windows_feature "HypervisorPlatform"
+}
+
+check_prerequisites
+
+set_env "ANDROID_SDK_ROOT" $androidSdkRoot
+set_env "ANDROID_EMULATOR_HOME" $androidEmulatorHome
 
 # Some of the SDK tools may ignore the environment variable or explicitly
 # specified paths, and still use this one. For this reason, we'll ensure
