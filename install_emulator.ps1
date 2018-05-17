@@ -1,14 +1,16 @@
 # Requirements
 # - Android sdk archive
 # - Android emulator archive
-# - 7-zip
+# - tar (msys provides it. Apparently, Windows 10 includes tarbsd,
+#        but it won't work with msys's bzip2.)
 # - jre 1.8 (1.10 doesn't work)
 
 Param(
     [Parameter(Mandatory=$true)]
     [string]$androidSdkArchive,
     [Parameter(Mandatory=$true)]
-    [string]$androidEmulatorArchive
+    [string]$androidEmulatorArchive,
+    [bool]$skipCleanup=$false
 )
 
 $ErrorActionPreference = "Stop"
@@ -23,16 +25,6 @@ if (!(check_elevated) ){
     throw "This script requires elevated privileges."
 }
 
-function install_sdk_packages() {
-    $sdkPackagesFile = "$scriptLocation\sdk_packages.txt"
-    check_path $sdkPackagesFile
-
-    gc $sdkPackagesFile | `
-        % {$_.Trim() } | `
-        ? { -not $_.StartsWith("#") } | `
-        % {install_android_sdk_package $_}
-}
-
 function check_prerequisites() {
     log_message "Checking prerequisites."
     $requiredFiles = @($androidSdkArchive, $androidEmulatorArchive)
@@ -45,12 +37,49 @@ function check_prerequisites() {
         throw "JAVA_HOME is not set. Please install JRE/JDK 8."
     }
     check_path $JAVA_HOME
+    check_path $msysBinDir
+}
+
+function extract_sdk_archive() {
+    if ($androidEmulatorArchive -notmatch "\.zip$") {
+        throw "The SDK archive is expected to be a .zip."
+    }
+    extract_zip $androidSdkArchive $androidSdkRoot
+}
+
+function extract_emulator_archive() {
+    # We're first removing the existing emulator dir. 
+    check_create_dir $androidEmulatorDir
+    # The archive is expected to contain a single top dir which includes the
+    # emulator files.
+
+    if ($androidEmulatorArchive -notmatch "\.tar\.[a-z]+$") {
+        throw "The emulator archive is expected to be .tar.*."
+    }
+
+    tar xf $androidEmulatorArchive -C $androidEmulatorDir.Replace("\", "/") `
+        --strip-components 1
+}
+
+
+function install_sdk_packages() {
+    $sdkPackagesFile = "$scriptLocation\sdk_packages.txt"
+    check_path $sdkPackagesFile
+
+    gc $sdkPackagesFile | `
+        % {$_.Trim() } | `
+        ? { -not $_.StartsWith("#") } | `
+        % {install_android_sdk_package $_}
 }
 
 check_prerequisites
 
 set_env "ANDROID_SDK_ROOT" $androidSdkRoot
 set_env "ANDROID_EMULATOR_HOME" $androidEmulatorHome
+
+if (!($skipCleanup)){
+    . "$scriptLocation\remove_emulator.ps1"
+}
 
 # Some of the SDK tools may ignore the environment variable or explicitly
 # specified paths, and still use this one. For this reason, we'll ensure

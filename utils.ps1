@@ -176,3 +176,25 @@ function check_windows_feature($featureName) {
         throw "The following Windows features are not enabled: $missingFeatures."
     }
 } 
+
+function ensure_binary_available($bin) {
+    if (!(where.exe $bin)) {
+        throw ("Could not find `"$bin`". Make sure that it's installed and its " +
+               "path is included in PATH.")
+    }
+}
+
+function check_create_dir($path)
+{
+    if (test-path $path) {
+        log_message "Directory already exists. Cleaning it up: `"$path`"."
+        rm -recurse -force $path
+    }
+}
+
+function extract_zip($src, $dest) {
+    # Make sure to use full paths.
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+
+    [System.IO.Compression.ZipFile]::ExtractToDirectory($src, $dest)
+}
