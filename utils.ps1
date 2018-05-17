@@ -135,3 +135,8 @@ function ensure_symlink($target, $link, $isDir) {
         }
     }
 }
+
+function stop_processes($name) {
+    get-process $name |  stop-process -PassThru | `
+        % { log_message "Stopped process: `"$($_.Name)`"." }
+}

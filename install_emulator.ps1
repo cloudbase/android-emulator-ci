@@ -16,7 +16,7 @@ if (!(check_elevated) ){
     throw "This script requires elevated privileges."
 }
 
-set_env "ANDROID_SDK_ROOT" $androidRootDir
+set_env "ANDROID_SDK_ROOT" $androidSdkRoot
 set_env "ANDROID_EMULATOR_HOME" $androidEmulatorHome
 
 function install_sdk_packages() {
@@ -30,7 +30,7 @@ function install_sdk_packages() {
     gc $sdkPackagesFile | `
         % {$_.Trim() } | `
         ? { -not $_.StartsWith("#") } | `
-         % {install_android_sdk_package $_}
+        % {install_android_sdk_package $_}
 }
 
 # Some of the SDK tools may ignore the environment variable or explicitly
