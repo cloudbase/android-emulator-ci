@@ -44,6 +44,17 @@ function install_android_sdk_package($packageName) {
     echo "y" | & $sdkManager "$packageName"
 }
 
+function accept_sdk_licenses() {
+    # We need to accept sdk licenses before
+    # installing android sdk packages.
+    $answers = "y`n"
+    # Probably we won't be asked more than 50 times.
+    # Would've been nice if the sdk manager had an argument
+    # to bypass this, though.
+    1..50 | % { $answers+="y`n"}
+    $answers | & $sdkManager --licenses
+}
+
 function create_avd($avdName, $packageName, $avdDevice, $abi, $path) {
     if (!$path) {
         $path = join-path $AndroidAvdDir $avdName

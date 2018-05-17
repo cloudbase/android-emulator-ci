@@ -96,5 +96,7 @@ extract_emulator_archive
 # specified paths, and still use this one. For this reason, we'll ensure
 # that it links to our avd dir, which may reside on a different disk.
 ensure_symlink $androidEmulatorHome $androidDefaultHomeDir -isDir $true
+
+accept_sdk_licenses
 install_sdk_packages
 create_avd $testAvdName $testAvdPackage $testAvdDevice $testAvdAbi
