@@ -66,7 +66,6 @@ function extract_emulator_archive() {
            --strip-components 1
 }
 
-
 function install_sdk_packages() {
     $sdkPackagesFile = "$scriptLocation\sdk_packages.txt"
     check_path $sdkPackagesFile
@@ -76,6 +75,24 @@ function install_sdk_packages() {
         ? { -not $_.StartsWith("#") } | `
         ? {$_} | `
         % {install_android_sdk_package $_}
+}
+
+function enable_whpx_emulator_feature() {
+    if (!(test-path $androidUserAdvancedFeatures)) {
+        echo "WindowsHypervisorPlatform = on" > $androidUserAdvancedFeatures
+    }
+    else {
+        $content = gc $androidUserAdvancedFeatures
+        if ($content | findstr "WindowsHypervisorPlatform") {
+            $content = $content -replace `
+                '(WindowsHypervisorPlatform =).*','$1 on'
+        }
+        else {
+            $content += "`r`nWindowsHypervisorPlatform = on`r`n"
+        }
+
+        sc $androidUserAdvancedFeatures $content
+    }
 }
 
 check_prerequisites
@@ -101,4 +118,6 @@ ensure_symlink $androidEmulatorHome $androidDefaultHomeDir -isDir $true
 
 accept_sdk_licenses
 install_sdk_packages
+enable_whpx_emulator_feature
+
 create_avd $testAvdName $testAvdPackage $testAvdDevice $testAvdAbi

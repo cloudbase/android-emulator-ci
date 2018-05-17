@@ -3,6 +3,7 @@ $androidSdkRoot = "$androidRootDir\sdk"
 $androidEmulatorHome = "$androidRootDir\android_home"
 $androidAvdDir = "$androidEmulatorHome\avd"
 $androidEmulatorDir = "$androidSdkRoot\emulator"
+$androidUserAdvancedFeatures = "$androidEmulatorHome\advancedFeatures.ini"
 
 # We'll use this dir for temporary files, simplifying cleanups.
 # Since this will also be used for storing the images, we assume
