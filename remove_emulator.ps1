@@ -9,6 +9,9 @@ function stop_emulator() {
     log_message "Stopping emulator instances."
     stop_processes "emulator*"
     stop_processes "qemu*"
+    stop_processes "adb*"
+    stop_processes "sdkmanager*"
+    stop_processes "avdmanager*"
 }
 
 function cleanup_files() {
