@@ -35,7 +35,7 @@ function check_elevated() {
 }
 
 function stop_processes($name) {
-    log_message "Stopping process(es) `"$name`"."
+    log_message "Stopping process(es): `"$name`"."
     get-process $name |  stop-process -PassThru | `
         % { log_message "Stopped process: `"$($_.Name)`"." }
 }

@@ -12,6 +12,7 @@ function install_android_sdk_package($packageName) {
 }
 
 function accept_sdk_licenses() {
+    log_message "Accepting Android SDK licenses."
     # We need to accept sdk licenses before
     # installing android sdk packages.
     $answers = "y`n"
@@ -38,6 +39,8 @@ function create_avd($avdName, $packageName, $avdDevice, $abi, $path) {
 }
 
 function set_android_emulator_feature($featureName, $status) {
+    log_message ("Setting Android emulator feature `"$featureName`" to " +
+                 "`"$status`".")
     if ($status -notin @("on", "off")) {
         throw ("Cannot set emulator feature. " +
                "Invalid status: $status. Expecting on/off.")
