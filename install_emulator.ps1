@@ -17,7 +17,8 @@ $ErrorActionPreference = "Stop"
 $scriptLocation = [System.IO.Path]::GetDirectoryName(
     $myInvocation.MyCommand.Definition)
 . "$scriptLocation\config.ps1"
-. "$scriptLocation\utils.ps1"
+
+import-module "$scriptLocation\utils\all.psm1"
 
 if (!(check_elevated) ){
     # We may need to run some installers, create some symlinks.
@@ -49,11 +50,9 @@ function extract_sdk_archive() {
 }
 
 function extract_emulator_archive() {
-    # We're first removing the existing emulator dir. 
     ensure_dir_empty $androidEmulatorDir
     # The archive is expected to contain a single top dir which includes the
     # emulator files.
-
     if ($androidEmulatorArchive -notmatch "\.tar\.[a-z0-9]+$") {
         throw "The emulator archive is expected to be .tar.*. " +
               "Was given: `"$androidEmulatorArchive`"."
