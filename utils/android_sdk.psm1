@@ -19,7 +19,7 @@ function accept_sdk_licenses() {
     # Would've been nice if the sdk manager had an argument
     # to bypass this, though.
     1..50 | % { $answers+="y`n"}
-    $answers | & $sdkManager --licenses
+    ( $answers | & $sdkManager --licenses ) | out-null
 }
 
 function create_avd($avdName, $packageName, $avdDevice, $abi, $path) {
@@ -35,4 +35,27 @@ function create_avd($avdName, $packageName, $avdDevice, $abi, $path) {
         --device $avdDevice `
         --abi $abi `
         --path $path
+}
+
+function set_android_emulator_feature($featureName, $status) {
+    if ($status -notin @("on", "off")) {
+        throw ("Cannot set emulator feature. " +
+               "Invalid status: $status. Expecting on/off.")
+    }
+
+    if (!(test-path $androidUserAdvancedFeatures)) {
+        $content = "$featureName = $status`r`n"
+    }
+    else {
+        $content = gc $androidUserAdvancedFeatures
+        if ($content -match "^[ `t]*$featureName") {
+            $content = $content -replace `
+                '($featureName =).*',"`$1 $status"
+        }
+        else {
+            $content += "`r`n$featureName = $status`r`n"
+        }
+    }
+
+    sc $androidUserAdvancedFeatures $content
 }

@@ -76,24 +76,6 @@ function install_sdk_packages() {
         % {install_android_sdk_package $_}
 }
 
-function enable_whpx_emulator_feature() {
-    if (!(test-path $androidUserAdvancedFeatures)) {
-        echo "WindowsHypervisorPlatform = on" > $androidUserAdvancedFeatures
-    }
-    else {
-        $content = gc $androidUserAdvancedFeatures
-        if ($content | findstr "WindowsHypervisorPlatform") {
-            $content = $content -replace `
-                '(WindowsHypervisorPlatform =).*','$1 on'
-        }
-        else {
-            $content += "`r`nWindowsHypervisorPlatform = on`r`n"
-        }
-
-        sc $androidUserAdvancedFeatures $content
-    }
-}
-
 check_prerequisites
 
 if (!($skipCleanup)){
@@ -117,6 +99,6 @@ ensure_symlink $androidEmulatorHome $androidDefaultHomeDir -isDir $true
 
 accept_sdk_licenses
 install_sdk_packages
-enable_whpx_emulator_feature
+set_android_emulator_feature "WindowsHypervisorPlatform" "on"
 
 create_avd $testAvdName $testAvdPackage $testAvdDevice $testAvdAbi
