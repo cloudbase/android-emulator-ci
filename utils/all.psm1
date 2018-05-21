@@ -7,6 +7,6 @@ import-module "$scriptLocation\pathutils.psm1"
 import-module "$scriptLocation\windows.psm1"
 import-module "$scriptLocation\android_sdk.psm1"
 import-module "$scriptLocation\msys.psm1"
-import-module "$scriptLocation\gtest.psm1"
+import-module "$scriptLocation\tests.psm1"
 
 Export-ModuleMember -function "*"

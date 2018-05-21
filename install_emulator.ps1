@@ -54,7 +54,7 @@ function extract_emulator_archive() {
     # The archive is expected to contain a single top dir which includes the
     # emulator files.
     if ($androidEmulatorArchive -notmatch "\.tar\.[a-z0-9]+$") {
-        throw "The emulator archive is expected to be .tar.*. " +
+        throw "The emulator archive is expected to be a tarball. " +
               "Was given: `"$androidEmulatorArchive`"."
     }
 
