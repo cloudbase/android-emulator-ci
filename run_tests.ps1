@@ -1,8 +1,5 @@
 # Requirements
-# - Android sdk archive
-# - Android emulator archive
-# - msys
-# - jre 1.8 (1.10 doesn't work)
+# - Android Emulator unit tests package
 
 Param(
     [Parameter(Mandatory=$true)]
@@ -30,7 +27,7 @@ function extract_unit_tests() {
 function run_gtests_from_dir($testdir, $resultDir, $pattern) {
     $testFailed = $false
     $testList = ls -Recurse $testdir | `
-                ? { $_.Name -match "unittests.exe" }
+                ? { $_.Name -match $pattern }
 
     foreach($testBinary in $testList) {
         $testName = $testBinary.Name
@@ -60,7 +57,8 @@ function run_gtests_from_dir($testdir, $resultDir, $pattern) {
 
 function run_unit_tests() {
     log_message "Running unit tests."
-    run_gtests_from_dir $emulatorUnitTestsDir $unitTestResultsDir "unittests.exe"
+    run_gtests_from_dir $emulatorUnitTestsDir `
+                        $unitTestResultsDir "unittests.exe"
 }
 
 rm $failedTestListFile -ErrorAction SilentlyContinue

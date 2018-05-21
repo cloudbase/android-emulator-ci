@@ -37,5 +37,5 @@ $testAvdAbi = "google_apis/x86"
 $msysBinDir = join-path $env:HOMEDRIVE "msys\1.0\bin"
 
 # The timeout to use per unit test suite.
-# 2 minutes seems reasonable for now.
-$unitTestSuiteTimeout = 300
+# 10 minutes seem reasonable for now.
+$unitTestSuiteTimeout = 600
