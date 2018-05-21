@@ -44,8 +44,12 @@ function run_gtests_from_dir($testdir, $resultDir, $pattern) {
             $errMsg = $_.Exception.Message
             log_message "$($testName) failed. Error: $errMsg"
             # TODO: keep better track of the failed tests.
+            # We may consider using a JSON.
             $testFailed = $true
+
             echo $testName >> $failedTestListFile
+            echo $errMsg >> $failedTestListFile
+            echo "" >> $failedTestListFile
         }
     }
 
