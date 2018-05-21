@@ -37,7 +37,7 @@ function run_gtests_from_dir($testdir, $resultDir, $pattern) {
         $testPath = $testBinary.FullName
 
         try {
-            run_gtest $testPath $resultDir
+            run_gtest $testPath $resultDir $unitTestSuiteTimeout
         }
         catch {
             # We'll continue to run tests.
