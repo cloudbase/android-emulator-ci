@@ -12,8 +12,7 @@ $failedTestListFile = "$logDir\results\failed_tests"
 $unitTestResultsDir = "$testResultsDir\unittests"
 
 # Not sure yet if it's safe to use a separate dir.
-$emulatorUnitTestsDir = "$androidSdk\emulator\unittests"
-$emulatorUnitTestsResultDir
+$emulatorUnitTestsDir = "$androidEmulatorDir\unittests"
 
 # We'll use this dir for temporary files, simplifying cleanups.
 # Since this will also be used for storing the images, we assume

@@ -23,9 +23,10 @@ function iex_with_timeout() {
             throw "Command returned non-zero code($LASTEXITCODE): `"$c`"."
         }
     }
-    wait-job $job -timeout $timeoutSec
 
     try {
+        wait-job $job -timeout $timeoutSec
+
         if ($job.State -notin @("Completed", "Failed")) {
             throw "Command timed out ($($timeoutSec)s): `"$cmd`"."
         }

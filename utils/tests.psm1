@@ -4,6 +4,8 @@ $scriptLocation = [System.IO.Path]::GetDirectoryName(
 . "$scriptLocation\common.ps1"
 
 function run_gtest($binPath, $resultDir, $timeout=-1) {
+    log_message "Running tests: $binPath"
+
     $binName = (split-path -leaf $binPath) -replace ".exe$",""
     $xmlOutputPath = join-path $resultDir ($binName + "_results.xml")
     $consoleOutputPath = join-path $resultDir ($binName + "_results.log")
