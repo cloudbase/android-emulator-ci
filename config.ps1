@@ -8,7 +8,7 @@ $androidUserAdvancedFeatures = "$androidEmulatorHome\advancedFeatures.ini"
 
 $logDir = "C:\Android\log"
 $testResultsDir = "$logDir\results"
-$failedTestListFile = "$logDir\results\failed_tests"
+$failedTestListFile = "$logDir\results\failed_tests.txt"
 $unitTestResultsDir = "$testResultsDir\unittests"
 
 # Not sure yet if it's safe to use a separate dir.
@@ -38,4 +38,4 @@ $msysBinDir = join-path $env:HOMEDRIVE "msys\1.0\bin"
 
 # The timeout to use per unit test suite.
 # 2 minutes seems reasonable for now.
-$unitTestSuiteTimeout = 120
+$unitTestSuiteTimeout = 300

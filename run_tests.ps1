@@ -50,14 +50,13 @@ function run_gtests_from_dir($testdir, $resultDir, $pattern) {
     }
 
     if($testFailed) {
-        throw "One or more unit tests has failed."
+        throw "One or more unit tests have failed."
     }
 }
 
 function run_unit_tests() {
     log_message "Running unit tests."
     run_gtests_from_dir $emulatorUnitTestsDir $unitTestResultsDir "unittests.exe"
-    log_message "All the unit tests have passed."
 }
 
 rm $failedTestListFile -ErrorAction SilentlyContinue
