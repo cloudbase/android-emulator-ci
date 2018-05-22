@@ -20,6 +20,8 @@ $scriptLocation = [System.IO.Path]::GetDirectoryName(
 
 import-module "$scriptLocation\utils\all.psm1"
 
+Start-Transcript -path "$logDir\install_emulator.log" -append
+
 if (!(check_elevated) ){
     # We may need to run some installers, create some symlinks.
     throw "This script requires elevated privileges."
@@ -102,3 +104,5 @@ install_sdk_packages
 set_android_emulator_feature "WindowsHypervisorPlatform" "on"
 
 create_avd $testAvdName $testAvdPackage $testAvdDevice $testAvdAbi
+
+stop-transcript
