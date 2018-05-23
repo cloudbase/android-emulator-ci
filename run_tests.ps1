@@ -75,7 +75,7 @@ function run_adt_emu_tests() {
     python "$adtInfraDir\emu_test\dotest.py" `
         --file_pattern="test_boot.py" `
         --session_dir=$adtEmuTestResultDir `
-        --config_file='$emuTestCfgDir\ui_cfg.csv' `
+        --config_file="$emuTestCfgDir\ui_cfg.csv" `
         --buildername="localhost"
         # --avd_list $testAvdName
 }
@@ -86,5 +86,5 @@ ensure_dir_exists $unitTestResultsDir
 extract_unit_tests
 prepare_adt_emu_tests
 
-# run_unit_tests
+run_unit_tests
 run_adt_emu_tests
