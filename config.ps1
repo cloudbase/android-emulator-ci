@@ -4,7 +4,8 @@ $androidEmulatorHome = "$androidRootDir\android_home"
 $androidAvdDir = "$androidEmulatorHome\avd"
 $androidEmulatorDir = "$androidSdkRoot\emulator"
 $androidUserAdvancedFeatures = "$androidEmulatorHome\advancedFeatures.ini"
-
+$androidPlatformToolsDir = "$androidSdkRoot\platform-tools"
+$androidSdkToolsBinDir = "$androidRootDir\sdk\bin"
 
 $logDir = "C:\Android\log"
 $testResultsDir = "$logDir\results"
@@ -39,3 +40,11 @@ $msysBinDir = join-path $env:HOMEDRIVE "msys\1.0\bin"
 # The timeout to use per unit test suite.
 # 10 minutes seem reasonable for now.
 $unitTestSuiteTimeout = 600
+
+$adtInfraRepoUrl = 'https://android.googlesource.com/platform/external/adt-infra'
+$adtInfraBranch = "emu-master-dev"
+$adtInfraDir = "$androidRootDir\adt-infra"
+
+# We spare some time/space by using shallow clones. When debugging,
+# full clones may be desired.
+$shallowGitClones = $true

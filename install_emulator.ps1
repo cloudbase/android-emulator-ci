@@ -1,8 +1,5 @@
-# Requirements
-# - Android sdk archive
-# - Android emulator archive
-# - msys
-# - jre 1.8 (1.10 doesn't work)
+# See the project readme for requirements.
+# We'll validate test requirements as well at this stage.
 
 Param(
     [Parameter(Mandatory=$true)]
@@ -102,6 +99,12 @@ ensure_symlink $androidEmulatorHome $androidDefaultHomeDir -isDir $true
 accept_sdk_licenses
 install_sdk_packages
 set_android_emulator_feature "WindowsHypervisorPlatform" "on"
+
+# Some of the emulator tests require those to be set in %PATH%.
+# We'll take care of it at this stage.
+add_to_env_path "$androidEmulatorDir"
+add_to_env_path "$androidPlatformToolsDir"
+add_to_env_path "$androidSdkToolsBinDir"
 
 create_avd $testAvdName $testAvdPackage $testAvdDevice $testAvdAbi
 

@@ -25,6 +25,21 @@ function set_env($key, $val, $target="User") {
     _set_env $key $val "Process"
 }
 
+function env_path_contains($path) {
+    $normPath = $path.Replace("\", "\\").Trim("\")
+    $env:Path -imatch "(?:^|;)$normPath\\?(?:$|;)"
+}
+
+function add_to_env_path($path, $target="User"){
+    if (!(env_path_contains $path)) {
+        log_message "Adding `"$path`" to %PATH%."
+        set_env "PATH" "$env:Path;$path" $target
+    }
+    else {
+        log_message "%PATH% already contains `"$path`"."
+    }
+}
+
 function check_elevated() {
     $identity = [System.Security.Principal.WindowsIdentity]::GetCurrent()
     $principal = new-object System.Security.Principal.WindowsPrincipal(

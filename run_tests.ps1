@@ -26,6 +26,12 @@ function extract_unit_tests() {
            -C (convert_to_msys_path $emulatorUnitTestsDir)
 }
 
+function prepare_adt_emu_tests() {
+    git_clone_pull $adtInfraDir $adtInfraRepoUrl $adtInfraBranch `
+                   -shallow=$shallowGitClones
+    pip install psutil
+}
+
 function run_gtests_from_dir($testdir, $resultDir, $pattern) {
     $testFailed = $false
     $testList = ls -Recurse $testdir | `
@@ -67,6 +73,8 @@ rm $failedTestListFile -ErrorAction SilentlyContinue
 ensure_dir_exists $unitTestResultsDir
 
 extract_unit_tests
+prepare_adt_emu_tests
+
 run_unit_tests
 
 stop-transcript
