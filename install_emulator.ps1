@@ -87,7 +87,6 @@ ensure_dir_exists $androidRootDir
 ensure_dir_exists $androidEmulatorHome
 
 extract_sdk_archive
-extract_emulator_archive
 
 # Some of the SDK tools may ignore the environment variable or explicitly
 # specified paths, and still use this one. For this reason, we'll ensure
@@ -96,6 +95,11 @@ ensure_symlink $androidEmulatorHome $androidDefaultHomeDir -isDir $true
 
 accept_sdk_licenses
 install_sdk_packages
+
+# The SDK manager may install the emulator as a dependency of other
+# packages. We'll install it last, making sure that it doesn't get
+# overridden.
+extract_emulator_archive
 set_android_emulator_feature "WindowsHypervisorPlatform" "on"
 
 # Some of the emulator tests require those to be set in %PATH%.
