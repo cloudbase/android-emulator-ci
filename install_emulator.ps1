@@ -36,6 +36,10 @@ function check_prerequisites() {
 
     check_path $env:JAVA_HOME
     check_path $msysBinDir
+
+    # Test requirements
+    ensure_binary_available "python"
+    ensure_binary_available "pip"
 }
 
 function extract_sdk_archive() {
