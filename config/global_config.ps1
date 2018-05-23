@@ -35,7 +35,7 @@ $testAvdPackage = "system-images;android-26;google_apis;x86"
 $testAvdDevice = "Nexus 5X"
 $testAvdAbi = "google_apis/x86"
 
-# For now, we'll just hardcode it. Make msys is installed
+# For now, we'll just hardcode it. Make sure msys is installed
 # at this location.
 $msysBinDir = join-path $env:HOMEDRIVE "msys\1.0\bin"
 

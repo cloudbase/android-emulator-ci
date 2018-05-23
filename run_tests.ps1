@@ -69,14 +69,15 @@ function run_unit_tests() {
 
 function run_adt_emu_tests() {
     log_message 'Running emulator integration tests from adt_infra.'
+    $emuTestCfgDir = "$scriptLocation\config\emu_test"
 
     ensure_dir_exists $adtEmuTestResultDir
     python "$adtInfraDir\emu_test\dotest.py" `
         --file_pattern="test_boot.py" `
         --session_dir=$adtEmuTestResultDir `
-        --config_file='.\config\local_cfg.csv' `
-        --buildername="localhost" `
-        --avd_list "Test_Nexus_5X_x86"
+        --config_file='$emuTestCfgDir\ui_cfg.csv' `
+        --buildername="localhost"
+        # --avd_list $testAvdName
 }
 
 rm $failedTestListFile -ErrorAction SilentlyContinue
@@ -86,3 +87,4 @@ extract_unit_tests
 prepare_adt_emu_tests
 
 # run_unit_tests
+run_adt_emu_tests

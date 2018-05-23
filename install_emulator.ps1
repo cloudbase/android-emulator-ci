@@ -52,8 +52,8 @@ function extract_sdk_archive() {
 
 function extract_emulator_archive() {
     ensure_dir_empty $androidEmulatorDir
-    # The archive is expected to contain a single top dir which includes the
-    # emulator files.
+    # The tarball is expected to include the emulator files
+    # in "android-*/tools/".
     if ($androidEmulatorArchive -notmatch "\.tar\.[a-z0-9]+$") {
         throw "The emulator archive is expected to be a tarball. " +
               "Was given: `"$androidEmulatorArchive`"."
@@ -63,7 +63,7 @@ function extract_emulator_archive() {
                  "-> `"$androidEmulatorHome`".")
     tar_msys xf (convert_to_msys_path $androidEmulatorArchive) `
            -C (convert_to_msys_path $androidEmulatorDir) `
-           --strip-components 1
+           --strip-components 2
 }
 
 function install_sdk_packages() {
