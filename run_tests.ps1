@@ -14,8 +14,6 @@ $scriptLocation = [System.IO.Path]::GetDirectoryName(
 
 import-module "$scriptLocation\utils\all.psm1"
 
-Start-Transcript -path "$logDir\run_tests.log" -append
-
 function extract_unit_tests() {
     ensure_dir_exists $emulatorUnitTestsDir
 
@@ -76,5 +74,3 @@ extract_unit_tests
 prepare_adt_emu_tests
 
 run_unit_tests
-
-stop-transcript
