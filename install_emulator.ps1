@@ -112,4 +112,8 @@ add_to_env_path "$androidEmulatorDir"
 add_to_env_path "$androidPlatformToolsDir"
 add_to_env_path "$androidSdkToolsBinDir"
 
+# Some quick sanity checks, validating the sdk executables.
+ensure_binary_available "emulator"
+ensure_binary_available "adb"
+
 create_avd $testAvdName $testAvdPackage $testAvdDevice $testAvdAbi
