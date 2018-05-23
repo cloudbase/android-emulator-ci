@@ -7,10 +7,12 @@ $androidUserAdvancedFeatures = "$androidEmulatorHome\advancedFeatures.ini"
 $androidPlatformToolsDir = "$androidSdkRoot\platform-tools"
 $androidSdkToolsBinDir = "$androidRootDir\sdk\bin"
 
-$logDir = "C:\Android\log"
+$logDir = "$androidRootDir\log"
 $testResultsDir = "$logDir\results"
-$failedTestListFile = "$logDir\results\failed_tests.txt"
 $unitTestResultsDir = "$testResultsDir\unittests"
+$failedTestListFile = "$unitTestResultsDir\failed_tests.txt"
+# Can't find a better name for those tests at the moment.
+$adtEmuTestResultDir = "$testResultsDir\adt_infra_emu_tests"
 
 # Not sure yet if it's safe to use a separate dir.
 $emulatorUnitTestsDir = "$androidEmulatorDir\unittests"

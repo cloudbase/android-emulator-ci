@@ -13,7 +13,7 @@ $ErrorActionPreference = "Stop"
 
 $scriptLocation = [System.IO.Path]::GetDirectoryName(
     $myInvocation.MyCommand.Definition)
-. "$scriptLocation\config.ps1"
+. "$scriptLocation\config\global_config.ps1"
 
 import-module "$scriptLocation\utils\all.psm1"
 
@@ -67,7 +67,7 @@ function extract_emulator_archive() {
 }
 
 function install_sdk_packages() {
-    $sdkPackagesFile = "$scriptLocation\sdk_packages.txt"
+    $sdkPackagesFile = "$scriptLocation\config\sdk_packages.txt"
     check_path $sdkPackagesFile
 
     gc $sdkPackagesFile | `

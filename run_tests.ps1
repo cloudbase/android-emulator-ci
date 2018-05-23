@@ -10,7 +10,7 @@ $ErrorActionPreference = "Stop"
 
 $scriptLocation = [System.IO.Path]::GetDirectoryName(
     $myInvocation.MyCommand.Definition)
-. "$scriptLocation\config.ps1"
+. "$scriptLocation\config\global_config.ps1"
 
 import-module "$scriptLocation\utils\all.psm1"
 
@@ -26,7 +26,7 @@ function extract_unit_tests() {
 
 function prepare_adt_emu_tests() {
     git_clone_pull $adtInfraDir $adtInfraRepoUrl $adtInfraBranch `
-                   -shallow=$shallowGitClones
+                   -shallow $shallowGitClones
     pip install psutil
 }
 
@@ -67,10 +67,22 @@ function run_unit_tests() {
                         $unitTestResultsDir "unittests.exe"
 }
 
+function run_adt_emu_tests() {
+    log_message 'Running emulator integration tests from adt_infra.'
+
+    ensure_dir_exists $adtEmuTestResultDir
+    python "$adtInfraDir\emu_test\dotest.py" `
+        --file_pattern="test_boot.py" `
+        --session_dir=$adtEmuTestResultDir `
+        --config_file='.\config\local_cfg.csv' `
+        --buildername="localhost" `
+        --avd_list "Test_Nexus_5X_x86"
+}
+
 rm $failedTestListFile -ErrorAction SilentlyContinue
 ensure_dir_exists $unitTestResultsDir
 
 extract_unit_tests
 prepare_adt_emu_tests
 
-run_unit_tests
+# run_unit_tests

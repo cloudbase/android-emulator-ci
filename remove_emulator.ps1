@@ -2,7 +2,7 @@ $ErrorActionPreference = "Stop"
 
 $scriptLocation = [System.IO.Path]::GetDirectoryName(
     $myInvocation.MyCommand.Definition)
-. "$scriptLocation\config.ps1"
+. "$scriptLocation\config\global_config.ps1"
 import-module "$scriptLocation\utils\all.psm1"
 
 function stop_emulator() {

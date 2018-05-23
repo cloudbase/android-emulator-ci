@@ -1,9 +1,0 @@
-platforms;android-26
-system-images;android-26;google_apis;x86
-platform-tools
-
-# add-ons;addon-google_apis-google-24 ?
-# build-tools;26.0.3
-# system-images;android-26;google_apis;x86_64
-# system-images;android-26;google_apis_playstore;x86
-# tools
