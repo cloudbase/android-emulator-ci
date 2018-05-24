@@ -103,7 +103,8 @@ function run_adt_emu_test_suite($testfilePattern) {
             "--session_dir=$adtEmuTestResultDir " +
             "--config_file=`"$emuTestCfgDir\test_cfg.csv`" " +
             "--buildername=`"localhost`" " +
-            "--timeout_in_seconds=$instanceBootTimeout")
+            "--timeout=$($integrationTestSuiteTimeout - 10) " +
+            "--boot_time=$instanceBootTimeout")
             # --avd_list $testAvdName
     iex_with_timeout $cmd $integrationTestSuiteTimeout
 }
