@@ -128,12 +128,12 @@ function run_adt_emu_tests() {
 rm $failedTestListFile -ErrorAction SilentlyContinue
 ensure_dir_exists $unitTestResultsDir
 
-# extract_unit_tests
-# prepare_adt_emu_tests
+extract_unit_tests
+prepare_adt_emu_tests
 
 clear_test_stats
 
-# run_unit_tests
+run_unit_tests
 run_adt_emu_tests
 
 validate_test_run
