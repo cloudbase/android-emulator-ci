@@ -11,10 +11,11 @@ $logDir = "$androidRootDir\log"
 $testResultsDir = "$logDir\results"
 $unitTestResultsDir = "$testResultsDir\unittests"
 # We're going to use a single file providing info about failed tests.
-$failedTestListFile = "$$testResultsDir\failed_tests.txt"
-$executedTestListFile = "$$testResultsDir\executed_tests.txt"
+$failedTestListFile = "$testResultsDir\failed_tests.txt"
+$executedTestListFile = "$testResultsDir\executed_tests.txt"
 # Can't find a better name for those tests at the moment.
 $adtEmuTestResultDir = "$testResultsDir\adt_infra_emu_tests"
+$adtEmuTestLog = "$adtEmuTestResultDir\console.log"
 $adtEmuEnabledTests = @("test_boot.py", "test_console.py", "test_ui.py")
 
 # Not sure yet if it's safe to use a separate dir.

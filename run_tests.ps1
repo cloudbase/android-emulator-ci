@@ -96,21 +96,23 @@ function run_adt_emu_test_suite($testfilePattern) {
                  "Instance boot timeout: $instanceBootTimeout seconds.")
     $emuTestCfgDir = "$scriptLocation\config\emu_test"
 
-    ensure_dir_exists $adtEmuTestResultDir
     $cmd = ("cmd /c " +
             "python `"$adtInfraDir\emu_test\dotest.py`" " +
-            "--file_pattern=`"$testfilePattern.py`" " +
+            "--file_pattern=`"$testfilePattern`" " +
+            "--test_dir=$adtEmuTestResultDir " +
             "--session_dir=$adtEmuTestResultDir " +
             "--config_file=`"$emuTestCfgDir\test_cfg.csv`" " +
             "--buildername=`"localhost`" " +
             "--timeout=$($integrationTestSuiteTimeout - 10) " +
-            "--boot_time=$instanceBootTimeout")
+            "--boot_time=$instanceBootTimeout >> $adtEmuTestLog 2>&1")
             # --avd_list $testAvdName
+    log_message "Executing $cmd"
     iex_with_timeout $cmd $integrationTestSuiteTimeout
 }
 
 function run_adt_emu_tests() {
     log_message 'Running emulator integration tests from adt_infra.'
+    ensure_dir_empty $adtEmuTestResultDir
 
     foreach ($testfilePattern in $adtEmuEnabledTests) {
         try {
