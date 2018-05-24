@@ -13,6 +13,7 @@ $unitTestResultsDir = "$testResultsDir\unittests"
 $failedTestListFile = "$unitTestResultsDir\failed_tests.txt"
 # Can't find a better name for those tests at the moment.
 $adtEmuTestResultDir = "$testResultsDir\adt_infra_emu_tests"
+$adtEmuEnabledTests = @("test_boot.py", "test_console.py", "test_ui.py")
 
 # Not sure yet if it's safe to use a separate dir.
 $emulatorUnitTestsDir = "$androidEmulatorDir\unittests"
@@ -40,8 +41,10 @@ $testAvdAbi = "google_apis/x86"
 $msysBinDir = join-path $env:HOMEDRIVE "msys\1.0\bin"
 
 # The timeout to use per unit test suite.
-# 10 minutes seem reasonable for now.
-$unitTestSuiteTimeout = 600
+# 5 minutes seem reasonable for now.
+$unitTestSuiteTimeout = 300
+# 20 min should be enough for integration test suites (omitting CTS for now).
+$integrationTestSuiteTimeout = 1200
 
 $adtInfraRepoUrl = 'https://android.googlesource.com/platform/external/adt-infra'
 $adtInfraBranch = "emu-master-dev"

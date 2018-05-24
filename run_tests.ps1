@@ -67,18 +67,26 @@ function run_unit_tests() {
                         $unitTestResultsDir "unittests.exe"
 }
 
-function run_adt_emu_tests() {
-    log_message 'Running emulator integration tests from adt_infra.'
+function run_adt_emu_test_suite($testfilePattern) {
+    log_message "Running adt emulator tests from `"$testfilePattern`"."
     $emuTestCfgDir = "$scriptLocation\config\emu_test"
 
     ensure_dir_exists $adtEmuTestResultDir
-    python "$adtInfraDir\emu_test\dotest.py" `
-        --file_pattern="test_boot.py" `
-        --session_dir=$adtEmuTestResultDir `
-        --config_file="$emuTestCfgDir\ui_cfg.csv" `
-        --buildername="localhost"
-        # --avd_list $testAvdName
+    $cmd = ("cmd /c " +
+            "python `"$adtInfraDir\emu_test\dotest.py`" " +
+            "--file_pattern=`"test_boot.py`" " +
+            "--session_dir=$adtEmuTestResultDir " +
+            "--config_file=`"$emuTestCfgDir\test_cfg.csv`" " +
+            "--buildername=`"localhost`"")
+            # --avd_list $testAvdName
+    iex_with_timeout $cmd $integrationTestSuiteTimeout
 }
+
+function run_adt_emu_tests() {
+    log_message 'Running emulator integration tests from adt_infra.'
+    $adtEmuEnabledTests | % { run_adt_emu_test_suite $_}
+}
+
 
 rm $failedTestListFile -ErrorAction SilentlyContinue
 ensure_dir_exists $unitTestResultsDir
