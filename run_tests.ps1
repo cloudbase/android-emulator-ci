@@ -99,7 +99,7 @@ function run_adt_emu_test_suite($testfilePattern) {
     ensure_dir_exists $adtEmuTestResultDir
     $cmd = ("cmd /c " +
             "python `"$adtInfraDir\emu_test\dotest.py`" " +
-            "--file_pattern=`"test_boot.py`" " +
+            "--file_pattern=`"$testfilePattern.py`" " +
             "--session_dir=$adtEmuTestResultDir " +
             "--config_file=`"$emuTestCfgDir\test_cfg.csv`" " +
             "--buildername=`"localhost`" " +
