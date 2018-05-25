@@ -52,6 +52,10 @@ $unitTestSuiteTimeout = 300
 # 30 min should be enough for integration test suites (omitting CTS for now).
 $integrationTestSuiteTimeout = 1500
 $instanceBootTimeout = 600
+# The ratio between soft timeout and hard timeout. We're using soft timeouts
+# for the tests, giving them time to clean up and publish results, before
+# brutally killing them.
+$softTimeoutRatio = 0.90
 
 $adtInfraRepoUrl = 'https://android.googlesource.com/platform/external/adt-infra'
 $adtInfraBranch = "emu-master-dev"

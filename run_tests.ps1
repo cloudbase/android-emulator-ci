@@ -103,7 +103,7 @@ function run_adt_emu_test_suite($testfilePattern) {
             "--session_dir=$adtEmuTestResultDir " +
             "--config_file=`"$emuTestCfgDir\test_cfg.csv`" " +
             "--buildername=`"localhost`" " +
-            "--timeout=$($integrationTestSuiteTimeout - 10) " +
+            "--timeout=$($integrationTestSuiteTimeout * $softTimeoutRatio) " +
             "--boot_time=$instanceBootTimeout >> $adtEmuTestLog 2>&1")
             # --avd_list $testAvdName
     log_message "Executing $cmd"
