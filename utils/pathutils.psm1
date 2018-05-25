@@ -48,7 +48,10 @@ function ensure_symlink($target, $link, $isDir) {
     log_message ("Ensuring symlink exists: $link -> $target. " +
                  "Directory: $isDir")
 
-    if ((get_full_path $target) -eq (get_full_path $link)) {
+    $target = get_full_path $target
+    $link = get_full_path $link
+
+    if ($target -eq $link) {
         log_message "$target IS $link. Skipping creating a symlink."
     }
 
