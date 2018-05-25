@@ -45,6 +45,9 @@ $msysBinDir = join-path $env:HOMEDRIVE "msys\1.0\bin"
 
 # The timeout to use per unit test suite.
 # 5 minutes seem reasonable for now.
+# Unfortunately, this option doesn't seem to be used properly by the
+# emulator integration tests, using the global "--timeout" value
+# as boot timeout.
 $unitTestSuiteTimeout = 300
 # 30 min should be enough for integration test suites (omitting CTS for now).
 $integrationTestSuiteTimeout = 1500
