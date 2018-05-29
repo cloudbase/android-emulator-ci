@@ -1,8 +1,18 @@
+Installing
+==========
+
+Here's the install sequence:
+* check_prerequisites.ps1
+* install_sdk.ps1
+* install_emulator.ps1
+
+The first stages should be run while waiting for the emulator to build.
+
 Requirements
 ============
 
 Sdk requirements
----------------------
+----------------
 * Android sdk archive
 * Android emulator archive
 * msys
