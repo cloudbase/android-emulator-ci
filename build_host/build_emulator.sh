@@ -179,6 +179,19 @@ function package_unitests () {
     popd
 }
 
+function install_deps () {
+    log_summary "Installing dependencies."
+
+    sudo apt-get update
+    sudo apt-get install -y $EXTRA_PACKAGES
+}
+
+if [ $SKIP_DEPS == "1"]; then
+    log_summary "Skipped installing dependencies."
+else
+    install_deps
+fi
+
 if [ $SKIP_SYNC_AOSP == "1"]; then
     log_summary "Skipped syncing AOSP tree."
 else

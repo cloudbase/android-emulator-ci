@@ -10,6 +10,7 @@ function ENV() {
 #     tar openssl binutils git make which curl \
 #     python-lxml python-openssl \
 #     ccache
+ENV EXTRA_PACKAGES "binutils make python-lxml python-openssl ccache"
 
 ENV DATA_DIR "/home/$(whoami)/android"
 ENV AOSP_DIR "$DATA_DIR/aosp"
