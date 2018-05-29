@@ -86,8 +86,8 @@ function ensure_repo_installed () {
     # used to manage dependent git repos.
     if [ ! $(which repo 2> /dev/null) ]; then
         REPO_URL="https://storage.googleapis.com/git-repo-downloads/repo"
-        curl $REPO_URL > /usr/bin/repo
-        chmod a+x /usr/bin/repo;
+        sudo curl $REPO_URL -o /usr/bin/repo
+        sudo chmod a+x /usr/bin/repo;
     fi
 }
 
