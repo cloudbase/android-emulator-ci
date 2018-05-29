@@ -12,5 +12,5 @@ function run_gtest($binPath, $resultDir, $timeout=-1) {
 
     $cmd = ("cmd /c $binPath --gtest_output=xml:$xmlOutputPath " +
             "> $consoleOutputPath 2>&1")
-    iex_with_timeout $cmd $timeout        
+    iex_with_timeout $cmd $timeout  
 }

@@ -6,7 +6,7 @@ $scriptLocation = [System.IO.Path]::GetDirectoryName(
 function _set_env($key, $val, $target="User") {
     $acceptableTargetList = @("process", "user", "machine")
     if ($target.ToLower() -notin $acceptableTargetList) {
-        throw ("Cannot set environment variable `"$key`" to `"$val`". " + 
+        throw ("Cannot set environment variable `"$key`" to `"$val`". " +
                "Unsupported target: `"$target`".")
     }
 
