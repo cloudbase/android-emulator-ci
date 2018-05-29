@@ -15,7 +15,6 @@ echo "Build started at $BUILD_START_DATE."
 BUILD_LOG="$BUILD_LOG_DIR/build.log"
 BUILD_SUMMARY_LOG="$BUILD_LOG_DIR/build_summary.log"
 
-
 mkdir -p $BUILD_LOG_DIR
 rm -f $BUILD_SUMMARY_LOG
 echo "Full log location: $BUILD_LOG"
