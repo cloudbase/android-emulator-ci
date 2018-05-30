@@ -127,19 +127,19 @@ function install_deps () {
     sudo apt-get install -y $EXTRA_PACKAGES
 }
 
-if [ $SKIP_DEPS == "1" ]; then
+if [[ $SKIP_DEPS == "1" ]]; then
     log_summary "Skipped installing dependencies."
 else
     install_deps
 fi
 
-if [ $SKIP_SYNC_AOSP == "1" ]; then
+if [[ $SKIP_SYNC_AOSP == "1" ]]; then
     log_summary "Skipped syncing AOSP tree."
 else
     sync_aosp_tree
 fi
 
-if [ $SKIP_BUILD == "1" ]; then
+if [[ $SKIP_BUILD == "1" ]]; then
     log_summary "Skipped building the emulator."
 else
     build_emulator

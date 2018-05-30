@@ -57,7 +57,7 @@ function setup_logging () {
 
     local default_log_name=$(basename $0 | sed 's/\..*//')
     local log_dir=$1
-    local log_name=${2:-default_log_name}
+    local log_name=${2:-$default_log_name}
 
     if [ -z $log_dir ]; then
         log_message "Log dir not specified."
@@ -66,8 +66,8 @@ function setup_logging () {
 
     mkdir -p $log_dir
 
-    export LOG_FILE="$log_dir/$log_name.txt"
-    export LOG_SUMMARY_FILE="$log_dir/$log_name.summary.txt"
+    export LOG_FILE="$log_dir/$log_name.log"
+    export LOG_SUMMARY_FILE="$log_dir/$log_name.summary.log"
 
     # Save original fds.
     exec 3>&1
