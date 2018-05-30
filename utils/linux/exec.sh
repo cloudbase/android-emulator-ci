@@ -1,5 +1,6 @@
-basedir_utils=$(dirname "$0")
-source "$basedir_utils/exec.sh"
+#!/bin/bash
+
+basedir_utils=$(dirname "$BASH_SOURCE")
 
 function exec_with_retry2 () {
     local MAX_RETRIES=$1

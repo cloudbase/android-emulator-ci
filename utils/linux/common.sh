@@ -1,4 +1,6 @@
-basedir_utils=$(dirname "$0")
+#!/bin/bash
+
+basedir_utils=$(dirname "$BASH_SOURCE")
 source "$basedir_utils/exec.sh"
 
 TIMESTAMP_FORMAT=${TIMESTAMP_FORMAT:-"+%F_%H:%M:%S%:::z"}
@@ -14,13 +16,14 @@ function log_warning () {
 function log_summary () {
     # Use this function to log certain build events, both to the
     # original stdout, as well as the log file.
-    if [ -z $LOGFILE_CONFIGURED ]; then
+    if [ ! -z $LOG_SUMMARY_FILE ]; then
         log_message "$@" >> $LOG_SUMMARY_FILE
     fi
 
     log_message "$@"
 }
 
+trap err_trap ERR
 function err_trap () {
     local r=$?
     set +o xtrace
@@ -32,12 +35,12 @@ function err_trap () {
 
 function die () {
     set +o xtrace
-    log_summary "$@ Full log in $BUILD_LOG"
+    log_summary "$@"
     exit 1
 }
 
 function setup_logging () {
-    if [ ! -z $LOGFILE_CONFIGURED ]; then
+    if [ ! -z $LOG_FILE ]; then
         # Logging already configured.
         return
     fi
@@ -61,24 +64,21 @@ function setup_logging () {
     exec &> >(tee -a "$LOG_FILE")
 }
 
-function set_exit () {
-    trap err_trap ERR
-    set -eE
-}
-
 function ensure_env_vars_set () {
     MISSING_VARS=()
 
     while test $# -gt 0
     do
         var=$1
-        
+
         if [ -z ${!var} ]; then
             MISSING_VARS+=($var)
         fi
         shift
     done
 
-    die "The following environment variables must " \
-        "be set: ${MISSING_VARS[@]}"
+    if [ -z $MISSING_VARS ]; then
+        die "The following environment variables must" \
+            "be set: ${MISSING_VARS[@]}"
+    fi
 }

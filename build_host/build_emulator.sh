@@ -3,14 +3,14 @@
 # Source build.rc first.
 # This script was initially used by a docker image,
 # to which we may return at some point.
-SCRIPT_DIR=$(dirname $0)
+set -eE
+
+SCRIPT_DIR=$(dirname "$BASH_SOURCE")
+
 source "$SCRIPT_DIR/build.rc"
 source "$SCRIPT_DIR/../utils/linux/all.sh"
 
 setup_logging $BUILD_LOG_DIR
-set_exit
-
-BUILD_START_DATE=$(date "+$TIMESTAMP_FORMAT")
 
 REQUIRED_ENV_VARS=(AOSP_DIR AOSP_BRANCH \
                    BUILD_LOG_DIR OUTPUT_PACKAGE_DIR \
@@ -20,8 +20,7 @@ ensure_env_vars_set ${REQUIRED_ENV_VARS[@]}
 # We'll try to use the same volume as much as possible.
 TMP_PKG_DIR="$OUTPUT_PACKAGE_DIR/ae_build_tmp"
 log_message "Using temporary dir: $TMP_PKG_DIR"
-rm -rf $TMP_PKG_DIR
-mkdir -p $TMP_PKG_DIR
+ensure_dir_empty $TMP_PKG_DIR
 
 function ensure_repo_installed () {
     # Fetch the Google "repo" tool, which is
