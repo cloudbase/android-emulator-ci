@@ -33,6 +33,7 @@ function err_trap () {
     log_summary "${0##*/} failed."
     if [ ! -z $LOGGING_CONFIGURED ]; then
         log_summary "Full log: $LOG_FILE."
+        tail -n 15 $LOG_FILE >&3
     fi
 
     exit $r
