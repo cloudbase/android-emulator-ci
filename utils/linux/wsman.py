@@ -57,7 +57,7 @@ def parse_args():
     return (url, username, password, cmd)
 
 def run_wsman_cmd(url, username, password, cmd):
-    protocol.Protocol.DEFAULT_TIMEOUT = "PT3600S"
+    protocol.Protocol.DEFAULT_TIMEOUT = 3600
 
     p = protocol.Protocol(endpoint=url,
                           transport='plaintext',
