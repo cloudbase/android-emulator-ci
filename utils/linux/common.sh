@@ -14,13 +14,15 @@ function log_warning () {
 }
 
 function log_summary () {
-    # Use this function to log certain build events, both to the
-    # original stdout, as well as the log file.
-    if [ ! -z $LOG_SUMMARY_FILE ]; then
+    set +o xtrace
+    log_message "$@"
+
+    if [ ! -z $LOGGING_CONFIGURED ]; then
+        log_message "$@" >&3
         log_message "$@" >> $LOG_SUMMARY_FILE
     fi
 
-    log_message "$@"
+    set -o xtrace
 }
 
 trap err_trap ERR
@@ -29,6 +31,9 @@ function err_trap () {
     set +o xtrace
 
     log_summary "${0##*/} failed."
+    if [ ! -z $LOGGING_CONFIGURED ]; then
+        log_summary "Full log: $LOG_FILE."
+    fi
 
     exit $r
 }
@@ -36,11 +41,16 @@ function err_trap () {
 function die () {
     set +o xtrace
     log_summary "$@"
+
+    if [ ! -z $LOGGING_CONFIGURED ]; then
+        log_summary "Full log: $LOG_FILE."
+    fi
+
     exit 1
 }
 
 function setup_logging () {
-    if [ ! -z $LOG_FILE ]; then
+    if [ ! -z $LOGGING_CONFIGURED ]; then
         # Logging already configured.
         return
     fi
@@ -48,8 +58,6 @@ function setup_logging () {
     local default_log_name=$(basename $0 | sed 's/\..*//')
     local log_dir=$1
     local log_name=${2:-default_log_name}
-
-    set -o xtrace
 
     if [ -z $log_dir ]; then
         log_message "Log dir not specified."
@@ -61,7 +69,15 @@ function setup_logging () {
     export LOG_FILE="$log_dir/$log_name.txt"
     export LOG_SUMMARY_FILE="$log_dir/$log_name.summary.txt"
 
-    exec &> >(tee -a "$LOG_FILE")
+    # Save original fds.
+    exec 3>&1
+    exec 4>&2
+
+    exec 1> $LOG_FILE 2>&1
+    rm -f $LOG_SUMMARY_FILE
+
+    set -o xtrace
+    export LOGGING_CONFIGURED="1"
 }
 
 function ensure_env_vars_set () {
@@ -77,7 +93,7 @@ function ensure_env_vars_set () {
         shift
     done
 
-    if [ -z $MISSING_VARS ]; then
+    if [ ! -z $MISSING_VARS ]; then
         die "The following environment variables must" \
             "be set: ${MISSING_VARS[@]}"
     fi
