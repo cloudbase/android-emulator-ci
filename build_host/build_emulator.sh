@@ -5,74 +5,17 @@
 # to which we may return at some point.
 SCRIPT_DIR=$(dirname $0)
 source "$SCRIPT_DIR/build.rc"
+source "$SCRIPT_DIR/../utils/linux/all.sh"
 
-TIMESTAMP_FORMAT=${TIMESTAMP_FORMAT:-"%F-%H%M%S"}
+setup_logging $BUILD_LOG_DIR
+set_exit
 
 BUILD_START_DATE=$(date "+$TIMESTAMP_FORMAT")
-echo "Build started at $BUILD_START_DATE."
-
-# We'll limit the stdout output, using a file for the full log.
-BUILD_LOG="$BUILD_LOG_DIR/build.log"
-BUILD_SUMMARY_LOG="$BUILD_LOG_DIR/build_summary.log"
-
-mkdir -p $BUILD_LOG_DIR
-rm -f $BUILD_SUMMARY_LOG
-echo "Full log location: $BUILD_LOG"
-
-# Save original fds.
-exec 3>&1
-exec 4>&2
-
-exec 1> $BUILD_LOG 2>&1
-
-function log_message () {
-    echo -e "[$(date "+$TIMESTAMP_FORMAT")] $@"
-}
-
-function log_summary () {
-    # Use this function to log certain build events, both to the
-    # original stdout, as well as the log file.
-    log_message "$@" >&3
-    log_message "$@" >> $BUILD_SUMMARY_LOG
-    log_message "$@"
-}
-
-trap err_trap ERR
-function err_trap () {
-    local r=$?
-    set +o xtrace
-
-    log_message "${0##*/} failed. Full log in $BUILD_LOG"
-    tail -n 15 $BUILD_LOG >&3
-
-    exit $r
-}
-
-function die () {
-    set +o xtrace
-    log_summary "$@ Full log in $BUILD_LOG"
-    exit 1
-}
-
-set -eE
-set -o xtrace
 
 REQUIRED_ENV_VARS=(AOSP_DIR AOSP_BRANCH \
                    BUILD_LOG_DIR OUTPUT_PACKAGE_DIR \
                    UNITTESTS_ARCHIVE_NAME)
-for var in $REQUIRED_ENV_VARS; do
-    MISSING_VARS=()
-
-    if [ -z ${!a} ]; then
-        MISSING_VARS+=($var)
-    fi
-done
-
-if [ -z $MISSING_VARS ]; then
-    log_summary "The following environment variables must " \
-                "be set: ${MISSING_VARS[@]}"
-    exit 1
-fi
+ensure_env_vars_set ${REQUIRED_ENV_VARS[@]}
 
 # We'll try to use the same volume as much as possible.
 TMP_PKG_DIR="$OUTPUT_PACKAGE_DIR/ae_build_tmp"
@@ -205,7 +148,3 @@ else
 fi
 
 rm -rf $TMP_PKG_DIR
-
-# Restore fds.
-exec 1>&3
-exec 2>&4
