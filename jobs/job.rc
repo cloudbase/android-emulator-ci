@@ -1,0 +1,46 @@
+function ENV() {
+    local var=$1
+    local default=$2
+
+    # We'll avoid overriding existing values.
+    export $var="${!var:-$default}"
+}
+
+ENV JOB_ID "test"
+ENV JOB_STATE_DIR "/tmp/emu_ci/$JOB_ID"
+ENV JOB_STATE_RC "$JOB_STATE_DIR/job_state.rc"
+ENV JOB_LOG_DIR "$JOB_STATE_DIR/log"
+ENV JOB_PACKAGES_DIR "$JOB_STATE_DIR/packages"
+
+# TODO: drop some of those defaults.
+# Openstack environment options
+ENV VM_NET_NAME "dataplane"
+ENV KEYPAIR_NAME "keyLuci"
+
+ENV BUILDER_VM_FLAVOR "androidEmuBuilderSmall"
+ENV EMU_VM_FLAVOR "win10emuSmall"
+
+ENV BUILDER_VM_IMAGE "ubuntu1804-emu-builder"
+ENV EMU_VM_IMAGE "win10-android-emulator"
+ENV VM_AVAILABILITY_ZONE "3par"
+
+ENV EMU_VM_NAME_TEMPLATE "win10-emu"
+ENV BUILDER_VM_NAME_TEMPATE "ubuntu-emu-builder"
+
+ENV EMU_VM_NAME "$EMU_VM_NAME_TEMPLATE$-$JOB_ID"
+ENV BUILDER_VM_NAME "$BUILDER_VM_NAME_TEMPATE-$JOB_ID"
+
+ENV VM_SSL_CERT_PATH "~/.ssl/ssl_winrm.crt"
+ENV VM_SSL_KEY_PATH "~/.ssl/ssl_winrm.key"
+ENV VM_SSH_KEY "~/.ssh/id_rsa"
+
+ENV CI_GIT_REPO "https://github.com/petrutlucian94/android-emulator-ci"
+
+ENV BUILDER_VM_USERNAME "ubuntu"
+ENV EMU_VM_USERNAME "Admin"
+
+ENV BUILDER_PACKAGES_DIR "/home/ubuntu/android/packages"
+ENV BUILDER_LOG_DIR "/home/ubuntu/android/log"
+ENV LOCAL_BUILDER_LOG_DIR "$JOB_LOG_DIR/builder"
+
+ENV EMU_VM_SCRIPTS_DIR "c:\android-emulator-ci"

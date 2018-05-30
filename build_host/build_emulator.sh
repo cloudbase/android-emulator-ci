@@ -1,10 +1,10 @@
 #!/bin/bash
 
+set -eE
+
 # Source build.rc first.
 # This script was initially used by a docker image,
 # to which we may return at some point.
-set -eE
-
 SCRIPT_DIR=$(dirname "$BASH_SOURCE")
 
 source "$SCRIPT_DIR/build.rc"

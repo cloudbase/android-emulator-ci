@@ -33,28 +33,27 @@ function exec_with_retry () {
 function run_wsmancmd() {
     local HOST=$1
     local USERNAME=$2
-    local PASSWORD=$3
-    local CMD=$4
+    local CERT_PATH=$3
+    local CERT_KEY_PATH=$4
+    local CMD=$5
 
-    python "$basedir_utils/wsman.py" -U https://$HOST:5986/wsman -u $USERNAME -p $PASSWORD $CMD
-}
-
-function run_wsmancmd_with_retry () {
-    local HOST=$1
-    local USERNAME=$2
-    local PASSWORD=$3
-    local CMD=$4
-
-    exec_with_retry "run_wsmancmd $HOST $USERNAME $PASSWORD $CMD"
+    python "$basedir_utils/wsman.py" \
+           -U https://$HOST:5986/wsman \
+           -u $USERNAME -k $CERT_PATH -K $CERT_KEY_PATH \
+           $CMD
 }
 
 function run_wsman_ps() {
     local HOST=$1
     local USERNAME=$2
-    local PASSWORD=$3
-    local CMD=$4
+    local CERT_PATH=$3
+    local CERT_KEY_PATH=$4
+    local CMD=$5
 
-    run_wsman_cmd $HOST $USERNAME $PASSWORD "powershell -NonInteractive -ExecutionPolicy RemoteSigned -Command $CMD"
+    CMD="powershell -NonInteractive" \
+        "-ExecutionPolicy RemoteSigned" \
+        "-Command $CMD"
+    run_wsman_cmd $HOST $USERNAME $CERT_PATH $CERT_KEY_PATH $CMD
 }
 
 function run_ssh_cmd () {
@@ -62,5 +61,14 @@ function run_ssh_cmd () {
     local SSHKEY=$2
     local CMD=$3
 
-    ssh -t -o 'PasswordAuthentication no' -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null' -i $SSHKEY $SSHUSER_HOST "$CMD"
+    ssh -t -o 'PasswordAuthentication no' \
+           -o 'StrictHostKeyChecking no' \
+           -o 'UserKnownHostsFile /dev/null' \
+           -i $SSHKEY $SSHUSER_HOST "$CMD"
+}
+
+function wait_for_listening_port () {
+    HOST=$1
+    PORT=$2
+    exec_with_retry 15 10 "nc -z -w15 $HOST $PORT"
 }

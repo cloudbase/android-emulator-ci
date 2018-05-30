@@ -22,20 +22,24 @@ from winrm import protocol
 
 
 def print_usage():
-    print ("%s -U <url> -u <username> -p <password> <cmd> [cmd_args]" %
+    print ("%s -U <url> -u <username> -p <password> "
+           "[-k <cert_pem_path>] [-K <cert_key_pem_path>] "
+           "<cmd> [cmd_args]" %
            sys.argv[0])
 
 
 def parse_args():
-
+    # TODO: switch to argparse
     username = None
     password = None
     url = None
     cmd = None
+    cert_pem_path = None
+    cert_key_pem_path = None
 
     try:
         show_usage = False
-        opts, args = getopt.getopt(sys.argv[1:], "hU:u:p:c:")
+        opts, args = getopt.getopt(sys.argv[1:], "hU:u:p:c:k:K:")
         for opt, arg in opts:
             if opt == "-h":
                 show_usage = True
@@ -45,24 +49,39 @@ def parse_args():
                 username = arg
             elif opt == "-p":
                 password = arg
+            elif opt == "-k":
+                cert_pem_path = arg
+            elif opt == "-K":
+                cert_key_pem_path = arg
 
         cmd = args
 
-        if show_usage or not (url and username and password and cmd):
+        have_certs = cert_pem_path and cert_key_pem_path
+        have_auth = username and (password or have_certs)
+        if show_usage or not (url and have_auth and cmd):
             print_usage()
 
     except getopt.GetoptError:
         print_usage()
+        exit(1)
 
-    return (url, username, password, cmd)
+    return (url, username, password, cert_pem_path,
+            cert_key_pem_path, cmd)
 
-def run_wsman_cmd(url, username, password, cmd):
+def run_wsman_cmd(url, username, password,
+                  cert_pem_path, cert_key_pem_path, cmd):
     protocol.Protocol.DEFAULT_TIMEOUT = 3600
 
+    use_cert = bool(cert_pem_path and cert_key_pem_path)
+    transport = ("ssl"
+                 if use_cert else "plaintext")
+
     p = protocol.Protocol(endpoint=url,
-                          transport='plaintext',
+                          transport=transport,
                           username=username,
-                          password=password)
+                          password=password,
+                          cert_pem=cert_pem_path,
+                          cert_key_pem=cert_key_pem_path)
 
     shell_id = p.open_shell()
 
@@ -78,14 +97,15 @@ def run_wsman_cmd(url, username, password, cmd):
 def main():
     exit_code = 0
 
-    url, username, password, cmd = parse_args()
-    if not (url and username and password and cmd):
-        exit_code = 1
-    else:
-        std_out, std_err, exit_code = run_wsman_cmd(url, username, password,
-                                                    cmd)
-        sys.stderr.write(std_err)
-        sys.stdout.write(std_out)
+    (url, username, password,
+     cert_pem_path, cert_key_pem_path, cmd) = parse_args()
+
+    std_out, std_err, exit_code = run_wsman_cmd(url, username, password,
+                                                cert_pem_path,
+                                                cert_key_pem_path,
+                                                cmd)
+    sys.stderr.write(std_err)
+    sys.stdout.write(std_out)
 
     sys.exit(exit_code)
 

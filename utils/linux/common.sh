@@ -1,9 +1,6 @@
 #!/bin/bash
 
-basedir_utils=$(dirname "$BASH_SOURCE")
-source "$basedir_utils/exec.sh"
-
-TIMESTAMP_FORMAT=${TIMESTAMP_FORMAT:-"+%F_%H:%M:%S%:::z"}
+TIMESTAMP_FORMAT=${TIMESTAMP_FORMAT:-"%F_%H:%M:%S%:::z"}
 
 function log_message () {
     echo -e "[$(date "+$TIMESTAMP_FORMAT")] $@"
