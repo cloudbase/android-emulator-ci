@@ -5,7 +5,8 @@ $scriptLocation = [System.IO.Path]::GetDirectoryName(
 
 # Sourcing the config to set some default values.
 # This should be avoided as much as possible.
-. "$scriptLocation\..\config\global_config.ps1"
+# TODO: drop this.
+. "$scriptLocation\..\..\test_host\config\global_config.ps1"
 
 function log_message($message) {
     echo "[$(Get-Date)] $message"
