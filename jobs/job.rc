@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function ENV() {
     local var=$1
     local default=$2
@@ -9,10 +11,20 @@ function ENV() {
 ENV JOB_ID "test"
 ENV JOB_STATE_DIR "/tmp/emu_ci/$JOB_ID"
 ENV JOB_STATE_RC "$JOB_STATE_DIR/job_state.rc"
+
+# We'll use a file that contains various variables that define the
+# config/state of the job. The CI jobs will update this file
+# during their execution (e.g. storing VM IDs, etc).
+# The variables used bellow will only get set if not included in the
+# job state file or other environment variables.
+
+if [[ -f $JOB_STATE_RC ]]; then
+    source $JOB_STATE_RC
+fi
+
 ENV JOB_LOG_DIR "$JOB_STATE_DIR/log"
 ENV JOB_PACKAGES_DIR "$JOB_STATE_DIR/packages"
 
-# TODO: drop some of those defaults.
 # Openstack environment options
 ENV VM_NET_NAME "dataplane"
 ENV KEYPAIR_NAME "keyLuci"
