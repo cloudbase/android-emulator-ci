@@ -30,17 +30,25 @@ function exec_with_retry () {
     exec_with_retry2 $MAX_RETRIES $INTERVAL $CMD
 }
 
-function run_wsmancmd() {
+function run_wsman_cmd() {
     local HOST=$1
     local USERNAME=$2
     local CERT_PATH=$3
     local CERT_KEY_PATH=$4
     local CMD=$5
+    local PS=$6
 
-    python "$basedir_utils/wsman.py" \
-           -U https://$HOST:5986/wsman \
-           -u $USERNAME -k $CERT_PATH -K $CERT_KEY_PATH \
-           $CMD
+    local ARGS=("$basedir_utils/wsman.py" \
+                -U https://$HOST:5986/wsman \
+                -u $USERNAME -k $CERT_PATH -K $CERT_KEY_PATH)
+    if [ ! -z $PS ]; then
+        ARGS+=("-P")
+    fi
+
+    ARGS+=("$CMD")
+    echo ${ARGS[@]}
+
+    python ${ARGS[@]}
 }
 
 function run_wsman_ps() {
@@ -50,10 +58,8 @@ function run_wsman_ps() {
     local CERT_KEY_PATH=$4
     local CMD=$5
 
-    CMD="powershell -NonInteractive" \
-        "-ExecutionPolicy RemoteSigned" \
-        "-Command $CMD"
-    run_wsman_cmd $HOST $USERNAME $CERT_PATH $CERT_KEY_PATH $CMD
+    run_wsman_cmd $HOST $USERNAME $CERT_PATH \
+                  $CERT_KEY_PATH "$CMD" "powershell"
 }
 
 function run_ssh_cmd () {

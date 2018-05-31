@@ -15,7 +15,9 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import base64
 import getopt
+import six
 import sys
 
 from winrm import protocol
@@ -23,7 +25,7 @@ from winrm import protocol
 
 def print_usage():
     print ("%s -U <url> -u <username> -p <password> "
-           "[-k <cert_pem_path>] [-K <cert_key_pem_path>] "
+           "[-k <cert_pem_path>] [-K <cert_key_pem_path>] [-P] "
            "<cmd> [cmd_args]" %
            sys.argv[0])
 
@@ -36,10 +38,11 @@ def parse_args():
     cmd = None
     cert_pem_path = None
     cert_key_pem_path = None
+    powershell = False
 
     try:
         show_usage = False
-        opts, args = getopt.getopt(sys.argv[1:], "hU:u:p:c:k:K:")
+        opts, args = getopt.getopt(sys.argv[1:], "hU:u:p:c:k:K:P")
         for opt, arg in opts:
             if opt == "-h":
                 show_usage = True
@@ -53,6 +56,8 @@ def parse_args():
                 cert_pem_path = arg
             elif opt == "-K":
                 cert_key_pem_path = arg
+            elif opt == "-P":
+                powershell = True
 
         cmd = args
 
@@ -60,18 +65,31 @@ def parse_args():
         have_auth = username and (password or have_certs)
         if show_usage or not (url and have_auth and cmd):
             print_usage()
+            exit(1)
 
     except getopt.GetoptError:
         print_usage()
         exit(1)
 
     return (url, username, password, cert_pem_path,
-            cert_key_pem_path, cmd)
+            cert_key_pem_path, cmd, powershell)
+
+def _parse_command(command, powershell):
+    if isinstance(command, list) or isinstance(command, tuple):
+        command = " ".join([six.text_type(c) for c in command])
+
+    if powershell:
+        b64_command = base64.b64encode(command.encode("utf_16_le"))
+        command = ("powershell.exe -ExecutionPolicy RemoteSigned "
+                   "-NonInteractive -EncodedCommand %s" % b64_command)
+    return command
 
 def run_wsman_cmd(url, username, password,
-                  cert_pem_path, cert_key_pem_path, cmd):
+                  cert_pem_path, cert_key_pem_path,
+                  cmd, powershell):
     protocol.Protocol.DEFAULT_TIMEOUT = 3600
 
+    cmd = _parse_command(cmd, powershell)
     use_cert = bool(cert_pem_path and cert_key_pem_path)
     transport = ("ssl"
                  if use_cert else "plaintext")
@@ -85,7 +103,7 @@ def run_wsman_cmd(url, username, password,
 
     shell_id = p.open_shell()
 
-    command_id = p.run_command(shell_id, cmd[0], cmd[1:])
+    command_id = p.run_command(shell_id, cmd)
     std_out, std_err, status_code = p.get_command_output(shell_id, command_id)
 
     p.cleanup_command(shell_id, command_id)
@@ -98,12 +116,14 @@ def main():
     exit_code = 0
 
     (url, username, password,
-     cert_pem_path, cert_key_pem_path, cmd) = parse_args()
+     cert_pem_path, cert_key_pem_path,
+     cmd, powershell) = parse_args()
 
     std_out, std_err, exit_code = run_wsman_cmd(url, username, password,
                                                 cert_pem_path,
                                                 cert_key_pem_path,
-                                                cmd)
+                                                cmd,
+                                                powershell)
     sys.stderr.write(std_err)
     sys.stdout.write(std_out)
 
