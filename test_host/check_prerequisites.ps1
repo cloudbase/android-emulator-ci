@@ -4,7 +4,7 @@ $scriptLocation = [System.IO.Path]::GetDirectoryName(
     $myInvocation.MyCommand.Definition)
 . "$scriptLocation\config\global_config.ps1"
 
-import-module "$scriptLocation\utils\all.psm1"
+import-module "$scriptLocation\..\utils\windows\all.psm1"
 
 check_windows_feature "HypervisorPlatform"
 $javaHome = $env:JAVA_HOME

@@ -41,7 +41,7 @@ $testAvdAbi = "google_apis/x86"
 
 # For now, we'll just hardcode it. Make sure msys is installed
 # at this location.
-$msysBinDir = join-path $env:HOMEDRIVE "msys\1.0\bin"
+$msysBinDir = "C:\msys\1.0\bin"
 
 # The timeout to use per unit test suite.
 # 5 minutes seem reasonable for now.

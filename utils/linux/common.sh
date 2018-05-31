@@ -2,6 +2,8 @@
 
 TIMESTAMP_FORMAT=${TIMESTAMP_FORMAT:-"%F_%H:%M:%S%:::z"}
 
+set -o pipefail
+
 function log_message () {
     echo -e "[$(date "+$TIMESTAMP_FORMAT")] $@"
 }
@@ -11,6 +13,7 @@ function log_warning () {
 }
 
 function log_summary () {
+    local _XTRACE=$(set +o | grep xtrace)
     set +o xtrace
     log_message "$@"
 
@@ -19,7 +22,8 @@ function log_summary () {
         log_message "$@" >> $LOG_SUMMARY_FILE
     fi
 
-    set -o xtrace
+    # restore xtrace
+    $_XTRACE
 }
 
 trap err_trap ERR
@@ -79,13 +83,13 @@ function setup_logging () {
 }
 
 function ensure_env_vars_set () {
-    MISSING_VARS=()
+    local MISSING_VARS=()
 
     while test $# -gt 0
     do
-        var=$1
+        local var=$1
 
-        if [ -z ${!var} ]; then
+        if [[ -z ${!var} ]]; then
             MISSING_VARS+=($var)
         fi
         shift

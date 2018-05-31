@@ -71,12 +71,12 @@ if [[ $PROC_COUNT -gt 0 ]]; then
 fi
 
 log_summary "Transfering the emulator archive."
-ps_emu_vm "Start-BitsTransfer -Source $EMULATOR_ARCHIVE_URL" \
-          "-Destination $EMU_VM_EMULATOR_ARCH_PATH"
+ps_emu_vm "Invoke-WebRequest -Uri $EMULATOR_ARCHIVE_URL" \
+          "-OutFile $EMU_VM_EMULATOR_ARCH_PATH"
 
 log_summary "Transfering the unittests archive."
-ps_emu_vm "Start-BitsTransfer -Source $UNITTESTS_ARCHIVE_URL" \
-          "-Destination $EMU_VM_UNITTESTS_ARCH_PATH"
+ps_emu_vm "Invoke-WebRequest -Uri $UNITTESTS_ARCHIVE_URL" \
+          "-OutFile $EMU_VM_UNITTESTS_ARCH_PATH"
 
 log_summary "Installing the emulator."
 ps_emu_vm "$EMU_VM_SCRIPTS_DIR\test_host\install_emulator.ps1" \

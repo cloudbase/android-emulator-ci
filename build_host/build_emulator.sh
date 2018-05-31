@@ -26,7 +26,7 @@ function ensure_repo_installed () {
     # Fetch the Google "repo" tool, which is
     # used to manage dependent git repos.
     if [ ! $(which repo 2> /dev/null) ]; then
-        REPO_URL="https://storage.googleapis.com/git-repo-downloads/repo"
+        local REPO_URL="https://storage.googleapis.com/git-repo-downloads/repo"
         sudo curl $REPO_URL -o /usr/bin/repo
         sudo chmod a+x /usr/bin/repo;
     fi
@@ -123,6 +123,9 @@ function package_unitests () {
 function install_deps () {
     log_summary "Installing dependencies."
 
+    # TODO: apt locks may be in place (especially as
+    # cloud init is still running). We should wait for
+    # those locks to be released.
     sudo apt-get update
     sudo apt-get install -y $EXTRA_PACKAGES
 }

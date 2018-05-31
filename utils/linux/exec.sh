@@ -8,7 +8,7 @@ function exec_with_retry2 () {
     local COUNTER=0
 
     while [ $COUNTER -lt $MAX_RETRIES ]; do
-        EXIT=0
+        local EXIT=0
         eval '${@:3}' || EXIT=$?
         if [ $EXIT -eq 0 ]; then
             return 0
@@ -56,7 +56,7 @@ function run_wsman_ps() {
     local USERNAME=$2
     local CERT_PATH=$3
     local CERT_KEY_PATH=$4
-    local CMD=$5
+    local CMD="${@:5}"
 
     run_wsman_cmd $HOST $USERNAME $CERT_PATH \
                   $CERT_KEY_PATH "$CMD" "powershell"
@@ -65,7 +65,7 @@ function run_wsman_ps() {
 function run_ssh_cmd () {
     local SSHUSER_HOST=$1
     local SSHKEY=$2
-    local CMD=$3
+    local CMD="${@:3}"
 
     ssh -t -o 'PasswordAuthentication no' \
            -o 'StrictHostKeyChecking no' \
@@ -74,7 +74,7 @@ function run_ssh_cmd () {
 }
 
 function wait_for_listening_port () {
-    HOST=$1
-    PORT=$2
-    exec_with_retry 15 10 "nc -z -w15 $HOST $PORT"
+    local HOST=$1
+    local PORT=$2
+    exec_with_retry "nc -z -w15 $HOST $PORT" 15 10
 }
