@@ -31,6 +31,14 @@ function scp_builder_vm () {
         -i $VM_SSH_KEY $@
 }
 
+function scp_log_srv () {
+    ensure_env_vars_set (LOG_SRV_KEY)
+
+    scp -o "UserKnownHostsFile /dev/null" \
+        -o "StrictHostKeyChecking no" \
+        -i $LOG_SRV_KEY $@
+}
+
 function ps_emu_vm () {
     local CMD="$1"
 

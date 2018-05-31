@@ -1,6 +1,6 @@
 Param(
     [Parameter(Mandatory=$true)]
-    [string]$androidEmulatorArchive,
+    [string]$androidEmulatorArchive
 )
 
 $ErrorActionPreference = "Stop"

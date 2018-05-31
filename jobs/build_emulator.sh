@@ -33,16 +33,27 @@ ssh_builder_vm "$BUILDER_VM_SCRIPTS_DIR/build_host/build_emulator.sh"
 
 log_summary "Build finished. Fetching the emulator files."
 mkdir -p $JOB_PACKAGES_DIR
-scp_builder_vm "$BUILDER_VM_USERNAME@$BUILDER_VM_IP:/$BUILDER_PACKAGES_DIR/\*" \
+
+log_summary "Fetching emulator archive."
+scp_builder_vm "$BUILDER_VM_USERNAME@$BUILDER_VM_IP:$BUILDER_PACKAGES_DIR/$EMULATOR_ARCHIVE_NAME" \
                "$JOB_PACKAGES_DIR/"
 
-log_summary "Fetched packages: $(ls $JOB_PACKAGES_DIR)."
+log_summary "Fetching unittests archive."
+scp_builder_vm "$BUILDER_VM_USERNAME@$BUILDER_VM_IP:$BUILDER_PACKAGES_DIR/$UNITTESTS_ARCHIVE_NAME" \
+               "$JOB_PACKAGES_DIR/"
+
+log_summary "Pushing emulator files to the log server."
+scp_log_srv "$JOB_PACKAGES_DIR/$EMULATOR_ARCHIVE_NAME" \
+            "$LOG_SRV:$LOG_SRV_JOB_PACKAGES_DIR"
+
+log_summary "Pushing unit tests to the log server."
+scp_log_srv "$JOB_PACKAGES_DIR/$UNITTESTS_ARCHIVE_NAME" \
+            "$LOG_SRV:$LOG_SRV_JOB_PACKAGES_DIR"
 
 log_summary "Fetching builder logs."
-
 mkdir -p $LOCAL_BUILDER_LOG_DIR
-scp_builder_vm "$BUILDER_VM_USERNAME@$BUILDER_VM_IP:/$BUILDER_LOG_DIR/\*" \
-               "$LOCAL_BUILDER_LOG_DIR/"
+scp_builder_vm -R "$BUILDER_VM_USERNAME@$BUILDER_VM_IP:$BUILDER_LOG_DIR/" \
+                  "$LOCAL_BUILDER_LOG_DIR/"
 
 log_summary "Cleaning up builder vm."
 nova delete $BUILDER_VM_ID
