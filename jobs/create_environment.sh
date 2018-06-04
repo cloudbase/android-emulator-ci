@@ -75,6 +75,10 @@ if [[ $PROC_COUNT -gt 0 ]]; then
     die "Timeout occured while waiting for init jobs."
 fi
 
+# Reload the job rc file, it should now include the instance ids,
+# among others.
+source $JOB_STATE_RC
+
 log_summary "Transfering the emulator archive."
 ps_emu_vm "Invoke-WebRequest -Uri $EMULATOR_ARCHIVE_URL" \
           "-OutFile $EMU_VM_EMULATOR_ARCH_PATH"
