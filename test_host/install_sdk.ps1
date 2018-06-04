@@ -73,4 +73,3 @@ add_to_env_path "$androidSdkToolsBinDir"
 
 # Some quick sanity checks, validating the sdk executables.
 ensure_binary_available "adb"
-ensure_binary_available "avdmanager.bat"
