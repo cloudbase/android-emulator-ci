@@ -28,7 +28,6 @@ exec_with_retry "ps_emu_vm whoami" \
                 $(( EMU_VM_REACHABLE_TIMEOUT / 5 )) 5
 
 log_summary "Cloning CI scripts."
-ps_emu_vm "rm -Recurse -Force $EMU_VM_SCRIPTS_DIR"
 ps_emu_vm "git clone $CI_GIT_REPO $EMU_VM_SCRIPTS_DIR"
 
 log_summary "Validating emulator vm prerequisites."

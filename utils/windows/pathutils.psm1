@@ -90,7 +90,7 @@ function ensure_symlink($target, $link, $isDir) {
 
 function ensure_binary_available($bin) {
     log_message ("Ensuring that the following " +
-                 "executable is available: `"$bin`"."
+                 "executable is available: `"$bin`".")
     if (!(where.exe $bin)) {
         throw ("Could not find `"$bin`". Make sure that it's installed " +
                "and its path is included in PATH.")
