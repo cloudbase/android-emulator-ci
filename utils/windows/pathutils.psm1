@@ -12,6 +12,7 @@ function get_full_path($path) {
 }
 
 function check_path($path) {
+    log_message "Ensuring that `"$PATH`" exists."
     if (!(test-path $path)) {
         throw "Could not find path: `"$path`"."
     }
@@ -88,9 +89,11 @@ function ensure_symlink($target, $link, $isDir) {
 }
 
 function ensure_binary_available($bin) {
+    log_message ("Ensuring that the following " +
+                 "executable is available: `"$bin`"."
     if (!(where.exe $bin)) {
-        throw ("Could not find `"$bin`". Make sure that it's installed and its " +
-               "path is included in PATH.")
+        throw ("Could not find `"$bin`". Make sure that it's installed " +
+               "and its path is included in PATH.")
     }
 }
 

@@ -41,12 +41,16 @@ function add_to_env_path($path, $target="User"){
 }
 
 function check_elevated() {
+    log_message "Checking elevated permissions."
+
     $identity = [System.Security.Principal.WindowsIdentity]::GetCurrent()
     $principal = new-object System.Security.Principal.WindowsPrincipal(
         $identity)
     $adminRole = [System.Security.Principal.WindowsBuiltInRole]::Administrator
     $elevated = $principal.IsInRole($adminRole)
-    return $elevated
+    if (!$elevated) {
+        throw "This script requires elevated privileges."
+    }
 }
 
 function stop_processes($name) {

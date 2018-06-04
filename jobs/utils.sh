@@ -59,3 +59,16 @@ function ps_emu_vm () {
     run_wsman_ps $EMU_VM_IP $EMU_VM_USERNAME \
                  $VM_SSL_CERT_PATH $VM_SSL_KEY_PATH "$CMD"
 }
+
+function start_emu_vm_job () {
+    local JOB_NAME=$1
+    local JOB_ARGS="${@:2}"
+    local JOB_LOG_FILE="$EMU_VM_LOG_DIR\\$JOB_NAME.log"
+
+    ps_emu_vm "mkdir -Force $EMU_VM_LOG_DIR"
+
+    CMD="$EMU_VM_SCRIPTS_DIR\\test_host\\$JOB_NAME.ps1 $JOB_ARGS"
+    CMD="$CMD > $JOB_LOG_FILE 2>&1"
+
+    ps_emu_vm "$CMD"
+}

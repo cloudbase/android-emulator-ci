@@ -15,10 +15,8 @@ $scriptLocation = [System.IO.Path]::GetDirectoryName(
 
 import-module "$scriptLocation\..\utils\windows\all.psm1"
 
-if (!(check_elevated) ){
-    # We may need to run some installers, create some symlinks.
-    throw "This script requires elevated privileges."
-}
+# We may need to run some installers, create some symlinks.
+check_elevated
 
 function check_prerequisites() {
     log_message "Checking Android SDK prerequisites."

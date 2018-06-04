@@ -32,7 +32,7 @@ ps_emu_vm "rm -Recurse -Force $EMU_VM_SCRIPTS_DIR"
 ps_emu_vm "git clone $CI_GIT_REPO $EMU_VM_SCRIPTS_DIR"
 
 log_summary "Validating emulator vm prerequisites."
-ps_emu_vm "$EMU_VM_SCRIPTS_DIR\test_host\check_prerequisites.ps1"
+start_emu_vm_job "check_prerequisites"
 
 log_summary "Transfering the sdk tools archive."
 ps_emu_vm "mkdir -force $EMU_VM_PACKAGES_DIR"
@@ -40,7 +40,7 @@ ps_emu_vm "Invoke-WebRequest -Uri $ANDROID_SDK_URL" \
           "-OutFile $EMU_VM_SDK_TOOLS_PATH"
 
 log_summary "Preparing the Android SDK."
-ps_emu_vm "$EMU_VM_SCRIPTS_DIR\test_host\install_sdk.ps1" \
-          "-androidSdkArchive $EMU_VM_SDK_TOOLS_PATH"
+start_emu_vm_job "install_sdk" \
+                 "-androidSdkArchive $EMU_VM_SDK_TOOLS_PATH"
 
 log_summary "Finished preparing emulator vm."
