@@ -79,7 +79,7 @@ ps_emu_vm "Invoke-WebRequest -Uri $UNITTESTS_ARCHIVE_URL" \
           "-OutFile $EMU_VM_UNITTESTS_ARCH_PATH"
 
 log_summary "Installing the emulator."
-ps_emu_vm "$EMU_VM_SCRIPTS_DIR\test_host\install_emulator.ps1" \
-          "-androidEmulatorArchive $EMU_VM_EMULATOR_ARCH_PATH"
+start_emu_vm_job "install_emulator" \
+                 "-androidEmulatorArchive $EMU_VM_EMULATOR_ARCH_PATH"
 
 log_summary "Finished creating test environment."
