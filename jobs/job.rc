@@ -26,6 +26,7 @@ ENV JOB_LOG_DIR "$JOB_STATE_DIR/log"
 ENV JOB_BUILD_LOG_DIR "$JOB_LOG_DIR/build"
 ENV JOB_EMU_VM_LOG_DIR "$JOB_LOG_DIR/emu_vm"
 ENV JOB_PACKAGES_DIR "$JOB_STATE_DIR/packages"
+ENV FINISHED_JOBS_DIR "$JOB_STATE_DIR/finished_jobs"
 
 # Openstack environment options
 ENV VM_NET_NAME "dataplane"
@@ -64,7 +65,7 @@ ENV EMU_VM_SCRIPTS_DIR "c:\android-emulator-ci"
 # It shouldn't take longer than 10 minutes, assuming that the
 # repos are cached.
 ENV CREATE_ENVIRONMENT_TIMEOUT $(( 25 * 60 ))
-ENV JOB_POLL_INTERVAL 20
+ENV JOB_POLL_INTERVAL 5
 
 ENV LOG_SRV "10.100.0.9"
 ENV LOG_SRV_DL_DIR "/srv/dl"

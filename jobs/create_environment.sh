@@ -29,20 +29,35 @@ finished_emu_vm_job=0
 TIME_COUNT=0
 PROC_COUNT=2
 
+function kill_pending_jobs () {
+    log_summary "Killing pending jobs."
+
+    kill_if_running $pid_build_job "Killing build job."
+    kill_if_running $pid_emu_vm_job "Killing emu vm init job."
+}
+
+function validate_completed_job () {
+    local JOB_NAME=$1
+
+    check_job_completed $1 || \
+        (kill_pending_jobs ; die "Job \"$JOB_NAME\" failed.")
+    log_summary "Job \"$JOB_NAME\" completed successfully."
+}
+
 while [[ $TIME_COUNT -lt $CREATE_ENVIRONMENT_TIMEOUT ]] \
         && [[ $PROC_COUNT -gt 0 ]]; do
 
     if [[ $finished_build_job -eq 0 ]]; then
-        ps -p $pid_build_job > /dev/null 2>&1 || finished_build_job=$?
+        check_running_pid $pid_build_job || finished_build_job=1
         [[ $finished_build_job -ne 0 ]] \
             && PROC_COUNT=$(( $PROC_COUNT - 1 )) \
-            && log_summary "Finished building the emulator."
+            && validate_completed_job "build_emulator"
     fi
     if [[ $finished_emu_vm_job -eq 0 ]]; then
-        ps -p $pid_emu_vm_job > /dev/null 2>&1 || finished_emu_vm_job=$?
+        check_running_pid $pid_emu_vm_job || finished_emu_vm_job=1
         [[ $finished_emu_vm_job -ne 0 ]] \
             && PROC_COUNT=$(( $PROC_COUNT - 1 )) \
-            && log_summary "Finished preparing emulator VM."
+            && validate_completed_job "create_emulator_vm"
     fi
 
     if [[ $PROC_COUNT -gt 0 ]]; then
@@ -55,18 +70,8 @@ log_summary "Finished waiting for the parallel init jobs."
 log_summary "After $TIME_COUNT seconds, there are $PROC_COUNT still running."
 
 if [[ $PROC_COUNT -gt 0 ]]; then
-    log_summary "Not all build jobs finished in time. Killing pending jobs."
-
-    if [[ $finished_build_job -eq 0 ]]; then
-        log_summary "Killing build job."
-        kill -9 $pid_build_job &> /dev/null
-    fi
-
-    if [[ $finished_emu_vm_job -eq 0 ]]; then
-        log_summary "Killing emu vm init job."
-        kill -9 $pid_emu_vm_job &> /dev/null
-    fi
-
+    log_summary "Not all build jobs finished in time."
+    kill_pending_jobs
     die "Timeout occured while waiting for init jobs."
 fi
 
@@ -83,3 +88,5 @@ start_emu_vm_job "install_emulator" \
                  "-androidEmulatorArchive $EMU_VM_EMULATOR_ARCH_PATH"
 
 log_summary "Finished creating test environment."
+
+mark_job_completed "create_environment"

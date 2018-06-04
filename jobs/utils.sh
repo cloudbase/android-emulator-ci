@@ -72,3 +72,34 @@ function start_emu_vm_job () {
 
     ps_emu_vm "$CMD"
 }
+
+function mark_job_completed () {
+    local JOB_NAME=$1
+    local JOB_RET_VAL=${2:0}
+    local JOB_FILE="$FINISHED_JOBS_DIR/$JOB_NAME"
+
+    log_summary "Marking job $JOB_NAME as completed." \
+                "Return value: $JOB_RET_VAL"
+    mkdir -p $FINISHED_JOBS_DIR
+    echo $JOB_RET_VAL > $JOB_FILE
+}
+
+function get_job_ret_val () {
+    local JOB_NAME=$1
+    local JOB_FILE="$FINISHED_JOBS_DIR/$JOB_NAME"
+
+    if [[ ! -f $JOB_FILE ]]; then
+        return -1
+    fi
+    cat $JOB_FILE
+}
+
+function check_job_completed () {
+    local JOB_NAME=$1
+    local JOB_FILE="$FINISHED_JOBS_DIR/$JOB_NAME"
+
+    if [[ ! -f $JOB_FILE ]]; then
+        return -1
+    fi
+    return 0
+}

@@ -32,6 +32,7 @@ function err_trap () {
     set +o xtrace
 
     log_summary "${0##*/} failed."
+
     if [ ! -z $LOGGING_CONFIGURED ]; then
         log_summary "Full log: $LOG_FILE."
         tail -n 15 $LOG_FILE >&3
@@ -43,10 +44,6 @@ function err_trap () {
 function die () {
     set +o xtrace
     log_summary "$@"
-
-    if [ ! -z $LOGGING_CONFIGURED ]; then
-        log_summary "Full log: $LOG_FILE."
-    fi
 
     exit 1
 }
@@ -68,8 +65,8 @@ function setup_logging () {
 
     mkdir -p $log_dir
 
-    export LOG_FILE="$log_dir/$log_name.log"
-    export LOG_SUMMARY_FILE="$log_dir/$log_name.summary.log"
+    LOG_FILE="$log_dir/$log_name.log"
+    LOG_SUMMARY_FILE="$log_dir/$log_name.summary.log"
 
     # Save original fds.
     exec 3>&1
@@ -79,7 +76,7 @@ function setup_logging () {
     rm -f $LOG_SUMMARY_FILE
 
     set -o xtrace
-    export LOGGING_CONFIGURED="1"
+    LOGGING_CONFIGURED="1"
 }
 
 function ensure_env_vars_set () {
@@ -98,5 +95,28 @@ function ensure_env_vars_set () {
     if [ ! -z $MISSING_VARS ]; then
         die "The following environment variables must" \
             "be set: ${MISSING_VARS[@]}"
+    fi
+}
+
+function check_running_pid () {
+    local pid=$1
+    local stopped=""
+
+    ps -p $pid &> /dev/null || stopped=1
+
+    if [[ $stopped ]]; then
+        return 1;
+    fi
+}
+
+function kill_if_running () {
+    local pid=$1
+    local kill_message=${2:-"Killing process: $1."}
+    local running=""
+
+    check_running_pid $1 && running=1
+    if [[ $running ]]; then
+        log_message $kill_message
+        kill -9 $pid &> /dev/null
     fi
 }

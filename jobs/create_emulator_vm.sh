@@ -44,3 +44,5 @@ start_emu_vm_job "install_sdk" \
                  "-androidSdkArchive $EMU_VM_SDK_TOOLS_PATH"
 
 log_summary "Finished preparing emulator vm."
+
+mark_job_completed "create_emulator_vm"
