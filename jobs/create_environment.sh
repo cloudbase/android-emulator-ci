@@ -10,15 +10,12 @@ source "$SCRIPT_DIR/utils.sh"
 
 setup_logging $JOB_LOG_DIR
 
-mkdir -p $JOB_BUILD_LOG_DIR
-mkdir -p $JOB_EMU_VM_LOG_DIR
-
 log_summary "Starting build job."
-nohup $SCRIPT_DIR/build_emulator.sh &> $JOB_BUILD_LOG_DIR/build_emulator.log &
+LOG_SCRIPT_NAME=1 nohup $SCRIPT_DIR/build_emulator.sh &
 pid_build_job=$!
 
 log_summary "Preparing emulator test environment."
-nohup $SCRIPT_DIR/create_emulator_vm.sh &> $JOB_EMU_VM_LOG_DIR/create_emulator_vm.log &
+LOG_SCRIPT_NAME=1 nohup $SCRIPT_DIR/create_emulator_vm.sh &
 pid_emu_vm_job=$!
 
 log_summary "Wating for parallel init jobs."

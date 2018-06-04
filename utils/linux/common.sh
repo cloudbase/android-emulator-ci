@@ -5,7 +5,15 @@ TIMESTAMP_FORMAT=${TIMESTAMP_FORMAT:-"%F_%H:%M:%S%:::z"}
 set -o pipefail
 
 function log_message () {
-    echo -e "[$(date "+$TIMESTAMP_FORMAT")] $@"
+    local SCRIPT_NAME
+
+    [[ $LOG_SCRIPT_NAME ]] && SCRIPT_NAME=" ($(basename $0))"
+
+    local MSG=[$(date "+$TIMESTAMP_FORMAT")]
+    MSG="$MSG$SCRIPT_NAME"
+    MSG="$MSG $@"
+
+    echo -e "$MSG"
 }
 
 function log_warning () {
