@@ -33,14 +33,18 @@ log_summary "Cloning CI scripts."
 ssh_builder_vm "rm -rf $BUILDER_VM_SCRIPTS_DIR"
 ssh_builder_vm "git clone -q $CI_GIT_REPO $BUILDER_VM_SCRIPTS_DIR"
 
+emulator_build_failed=""
 log_summary "Building the emulator."
 ssh_builder_vm "SKIP_DEPS=$BUILDER_IMAGE_CACHE" \
-               "$BUILDER_VM_SCRIPTS_DIR/build_host/build_emulator.sh"
+               "$BUILDER_VM_SCRIPTS_DIR/build_host/build_emulator.sh" \
+               || emulator_build_failed="1"
 
 log_summary "Fetching builder logs."
 mkdir -p $LOCAL_BUILDER_LOG_DIR
 scp_builder_vm -r "$BUILDER_VM_USERNAME@$BUILDER_VM_IP:$BUILDER_LOG_DIR" \
                   "$LOCAL_BUILDER_LOG_DIR"
+
+[[ $emulator_build_failed ]] && die "Failed to build the emulator."
 
 log_summary "Fetching the emulator files."
 mkdir -p $JOB_PACKAGES_DIR

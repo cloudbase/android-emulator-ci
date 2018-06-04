@@ -34,3 +34,18 @@ function get_vm_ip() {
 
     echo $ip
 }
+
+function delete_vm_if_exists() {
+    local VM_ID=$1
+
+    if [[ -z $VM_ID ]]; then
+        log_summary "No vm id specified. Skipping delete."
+    fi
+
+    if [[ $(nova list | grep $VM_ID) ]]; then
+        log_summary "Deleting vm $VM_ID"
+        nova delete $VM_ID
+    else
+        log_summary "VM $VM_ID does not exist. Skiiping delete."
+    fi
+}

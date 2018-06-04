@@ -63,6 +63,9 @@ extract_sdk_archive
 # that it links to our avd dir, which may reside on a different disk.
 ensure_symlink $androidEmulatorHome $androidDefaultHomeDir -isDir $true
 
+# Some SDK tools may fail if the following file does not exist.
+echo "" > "$androidEmulatorHome\repositories.cfg"
+
 accept_sdk_licenses
 install_sdk_packages
 
