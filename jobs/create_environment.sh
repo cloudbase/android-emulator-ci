@@ -14,11 +14,11 @@ mkdir -p $JOB_BUILD_LOG_DIR
 mkdir -p $JOB_EMU_VM_LOG_DIR
 
 log_summary "Starting build job."
-nohup $SCRIPT_DIR/build_emulator.sh &> JOB_BUILD_LOG_DIR/build_emulator.log &
+nohup $SCRIPT_DIR/build_emulator.sh &> $JOB_BUILD_LOG_DIR/build_emulator.log &
 pid_build_job=$!
 
 log_summary "Preparing emulator test environment."
-nohup $SCRIPT_DIR/create_emulator_vm.sh &> JOB_EMU_VM_LOG_DIR/create_emulator_vm.log &
+nohup $SCRIPT_DIR/create_emulator_vm.sh &> $JOB_EMU_VM_LOG_DIR/create_emulator_vm.log &
 pid_emu_vm_job=$!
 
 log_summary "Wating for parallel init jobs."
@@ -46,7 +46,7 @@ while [[ $TIME_COUNT -lt $CREATE_ENVIRONMENT_TIMEOUT ]] \
     fi
 
     if [[ $PROC_COUNT -gt 0 ]]; then
-        sleep JOB_POLL_INTERVAL
+        sleep $JOB_POLL_INTERVAL
         TIME_COUNT=$(( $TIME_COUNT + $JOB_POLL_INTERVAL ))
     fi
 done
