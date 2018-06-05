@@ -14,7 +14,6 @@ function cifs_to_unc_path () {
 
 function ensure_share_unmounted () {
     local MOUNT=$1
-    local FORCE=$2
 
     MOUNT=$(echo $MOUNT | tr "\\" "/")
     local MOUNTED_SHARE=$(mount | tr "\\" "/" | \
@@ -24,11 +23,7 @@ function ensure_share_unmounted () {
         log_summary "\"$MOUNT\" is not mounted. Skipping unmount."
     else
         log_summary "Unmounting \"$MOUNT\"."
-        if [ -z $FORCE ]; then
-            umount $MOUNT
-        else
-            sudo umount -f $MOUNT
-        fi
+        sudo umount -f $MOUNT
 
         if [[ $(is_wsl) ]]; then
             net.exe use $(cifs_to_unc_path $MOUNT) /delete

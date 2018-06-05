@@ -35,7 +35,7 @@ scp_log_srv -r \
             "$LOG_SRV_USERNAME@$LOG_SRV:$LOG_SRV_JOB_LOG_DIR"
 
 log_summary "Unmounting emulator vm shares."
-ensure_share_unmounted $EMU_VM_LOCAL_LOG_MOUNT -f
-ensure_share_unmounted $EMU_VM_LOCAL_RESULTS_MOUNT -f
+ensure_share_unmounted $EMU_VM_LOCAL_LOG_MOUNT
+ensure_share_unmounted $EMU_VM_LOCAL_RESULTS_MOUNT
 
 mark_job_completed "collect_logs"
