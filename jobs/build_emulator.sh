@@ -17,6 +17,7 @@ BUILDER_VM_ID=$(boot_vm \
                 --flavor $BUILDER_VM_FLAVOR \
                 --image $BUILDER_VM_IMAGE \
                 --availability-zone $VM_AVAILABILITY_ZONE \
+                --key-name $KEYPAIR_NAME \
                 $BUILDER_VM_NAME)
 set_job_state_var BUILDER_VM_ID $BUILDER_VM_ID
 

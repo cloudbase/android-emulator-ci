@@ -116,5 +116,5 @@ function mount_emu_vm_share () {
     log_summary "Mounting $SHARE_PATH to $MOUNT_PATH."
 
     mkdir -p $MOUNT_PATH
-    mount -t cifs -o guest $SHARE_PATH $MOUNT_PATH
+    sudo mount -t cifs -o guest $SHARE_PATH $MOUNT_PATH
 }

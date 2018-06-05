@@ -8,6 +8,8 @@ source "$SCRIPT_DIR/job.rc"
 source "$SCRIPT_DIR/../utils/linux/all.sh"
 source "$SCRIPT_DIR/utils.sh"
 
+setup_logging $JOB_LOG_DIR
+
 # At this point, we assume that the emulator build logs have already
 # been fetched from the build vm and stored in the $JOB_STATE_DIR.
 
@@ -31,5 +33,9 @@ log_summary "Transfering logs to log server."
 scp_log_srv -r \
             "$JOB_LOG_DIR" \
             "$LOG_SRV_USERNAME@$LOG_SRV:$LOG_SRV_JOB_LOG_DIR"
+
+log_summary "Unmounting emulator vm shares."
+ensure_unmounted $EMU_VM_LOCAL_LOG_MOUNT -f
+ensure_unmounted $EMU_VM_LOCAL_RESULTS_MOUNT -f
 
 mark_job_completed "collect_logs"

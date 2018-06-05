@@ -17,6 +17,7 @@ EMU_VM_ID=$(boot_vm \
             --image $EMU_VM_IMAGE \
             --availability-zone $VM_AVAILABILITY_ZONE \
             --user-data $VM_SSL_CERT_PATH \
+            --key-name $KEYPAIR_NAME \
             $EMU_VM_NAME)
 set_job_state_var EMU_VM_ID $EMU_VM_ID
 
