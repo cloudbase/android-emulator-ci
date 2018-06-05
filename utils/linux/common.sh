@@ -128,3 +128,7 @@ function kill_if_running () {
         kill -9 $pid &> /dev/null
     fi
 }
+
+function is_wsl () {
+    cat /proc/version | grep Microsoft
+}

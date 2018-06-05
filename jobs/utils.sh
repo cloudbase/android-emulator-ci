@@ -119,7 +119,16 @@ function mount_emu_vm_share () {
     log_summary "Mounting $SHARE_PATH to $MOUNT_PATH."
 
     mkdir -p $MOUNT_PATH
-    sudo mount -t cifs -o \
-        username="$EMU_VM_USERNAME",password="$EMU_VM_PASSWORD" \
-        $SHARE_PATH $MOUNT_PATH
+
+    if [[ $(is_wsl) ]]; then
+        # WSL doesn't allow mounting SMB shares directly.
+        local SHARE_UNC_PATH=$(cifs_to_unc_path $SHARE_PATH)
+        net.exe use $SHARE_UNC_PATH \
+                    /user:$EMU_VM_USERNAME $EMU_VM_PASSWORD
+        sudo mount -t drvfs $SHARE_UNC_PATH $MOUNT_PATH
+    else
+        sudo mount -t cifs -o \
+            username="$EMU_VM_USERNAME",password="$EMU_VM_PASSWORD" \
+            $SHARE_PATH $MOUNT_PATH
+    fi
 }

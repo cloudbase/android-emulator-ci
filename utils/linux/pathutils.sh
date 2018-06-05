@@ -8,6 +8,10 @@ function ensure_dir_empty () {
     mkdir -p $DIR
 }
 
+function cifs_to_unc_path () {
+    echo $1 | tr / "\\" 2> /dev/null
+}
+
 function ensure_unmounted () {
     local MOUNT=$1
     local FORCE=$2
