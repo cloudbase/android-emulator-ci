@@ -127,3 +127,37 @@ function extract_zip($src, $dest) {
     log_message "Extracting zip: `"$src`" -> `"$dest`"."
     [System.IO.Compression.ZipFile]::ExtractToDirectory($src, $dest)
 }
+
+function ensure_smb_share($shareName, $sharePath) {
+    log_message ("Ensuring that the `"$shareName`" SMB share " +
+                 "exists, exporting `"$sharePath`".")
+    $sharePath = get_full_path $sharePath
+
+    $existingShare = get-smbshare -name $shareName -ErrorAction ignore
+    if ($existingShare) {
+        $existingSharePath = get_full_path $existingShare.Path
+        if ($existingSharePath -ne $sharePath) {
+            throw ("Share `"$shareName`" already exists but it exports" +
+                   "a different path: `"$existingSharePath`". " +
+                   "Was requested: `"$sharePath`".")
+        }
+        log_message ("Share `"$shareName`" already exists, " +
+                     "exporting the requested " +
+                     "path: `"$sharePath`".")
+    }
+    else {
+        log_message "Share $shareName does not exist. Creating it."
+        ensure_dir_exists $sharePath
+        New-SmbShare -Name $shareName -Path $sharePath
+    }
+}
+
+function grant_smb_share_access($shareName, $accountName,
+                                $accessRight="Full") {
+    log_message ("Granting `"$accessRight`" SMB share access " +
+                 "on `"$shareName`" to `"accountName`".")
+    Grant-SmbShareAccess -AccountName $accountName `
+                         -AccessRight $accessRight `
+                         -name $shareName -Force
+    set-smbpathacl $shareName
+}
