@@ -8,6 +8,12 @@ source "$SCRIPT_DIR/job.rc"
 source "$SCRIPT_DIR/../utils/linux/all.sh"
 source "$SCRIPT_DIR/utils.sh"
 
+setup_logging $JOB_LOG_DIR
+
+log_summary "Unmounting emulator vm shares."
+ensure_unmounted $EMU_VM_LOCAL_LOG_MOUNT
+ensure_unmounted $EMU_VM_LOCAL_RESULTS_MOUNT
+
 log_summary "Cleaning up local emulator packages."
 rm -f "$JOB_PACKAGES_DIR/$EMULATOR_ARCHIVE_NAME"
 rm -f "$JOB_PACKAGES_DIR/$UNITTESTS_ARCHIVE_NAME"

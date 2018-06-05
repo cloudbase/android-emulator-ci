@@ -7,8 +7,8 @@ $androidUserAdvancedFeatures = "$androidEmulatorHome\advancedFeatures.ini"
 $androidPlatformToolsDir = "$androidSdkRoot\platform-tools"
 $androidSdkToolsBinDir = "$androidRootDir\sdk\bin"
 
-$logDir = "$androidRootDir\log"
-$testResultsDir = "$logDir\results"
+# $logDir = "$androidRootDir\log"
+$testResultsDir = "$androidRootDir\test_results"
 $unitTestResultsDir = "$testResultsDir\unittests"
 # We're going to use a single file providing info about failed tests.
 $failedTestListFile = "$testResultsDir\failed_tests.txt"

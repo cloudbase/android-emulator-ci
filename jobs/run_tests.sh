@@ -8,6 +8,8 @@ source "$SCRIPT_DIR/job.rc"
 source "$SCRIPT_DIR/../utils/linux/all.sh"
 source "$SCRIPT_DIR/utils.sh"
 
+setup_logging $JOB_LOG_DIR
+
 ps_emu_vm "Invoke-WebRequest -Uri $ANDROID_SDK_URL" \
           "-OutFile $EMU_VM_SDK_TOOLS_PATH"
 

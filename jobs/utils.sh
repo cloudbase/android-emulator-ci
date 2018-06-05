@@ -53,7 +53,8 @@ function ssh_log_srv () {
 function ps_emu_vm () {
     local CMD="$@"
 
-    required_vars=(EMU_VM_IP EMU_VM_USERNAME VM_SSL_CERT_PATH VM_SSL_KEY_PATH)
+    required_vars=(EMU_VM_IP EMU_VM_USERNAME \
+                   VM_SSL_CERT_PATH VM_SSL_KEY_PATH)
     ensure_env_vars_set $required_vars
 
     run_wsman_ps $EMU_VM_IP $EMU_VM_USERNAME \
@@ -102,4 +103,18 @@ function check_job_completed () {
         return -1
     fi
     return 0
+}
+
+function mount_emu_vm_share () {
+    local SHARE_NAME=$1
+    local MOUNT_PATH=$2
+
+    required_vars=(EMU_VM_IP SHARE_NAME MOUNT_PATH)
+    ensure_env_vars_set $required_vars
+
+    local SHARE_PATH="//$EMU_VM_IP/$SHARE_NAME"
+    log_summary "Mounting $SHARE_PATH to $MOUNT_PATH."
+
+    mkdir -p $MOUNT_PATH
+    mount -t cifs -o guest $SHARE_PATH $MOUNT_PATH
 }
