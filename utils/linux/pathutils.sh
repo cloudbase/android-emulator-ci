@@ -12,12 +12,15 @@ function cifs_to_unc_path () {
     echo $1 | tr / "\\" 2> /dev/null
 }
 
-function ensure_unmounted () {
+function ensure_share_unmounted () {
     local MOUNT=$1
     local FORCE=$2
 
-    local MOUNTED=$(mount | awk '{print $3}' | grep -w $MOUNT)
-    if [[ -z $MOUNTED ]]; then
+    MOUNT=$(echo $MOUNT | tr "\\" "/")
+    local MOUNTED_SHARE=$(mount | tr "\\" "/" | \
+                          grep -E "(^| )$MOUNT " | awk '{print $1}')
+
+    if [[ -z $MOUNTED_SHARE ]]; then
         log_summary "\"$MOUNT\" is not mounted. Skipping unmount."
     else
         log_summary "Unmounting \"$MOUNT\"."
@@ -25,6 +28,10 @@ function ensure_unmounted () {
             umount $MOUNT
         else
             sudo umount -f $MOUNT
+        fi
+
+        if [[ $(is_wsl) ]]; then
+            net.exe use $(cifs_to_unc_path $MOUNT) /delete
         fi
     fi
 }

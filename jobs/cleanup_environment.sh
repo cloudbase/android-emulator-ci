@@ -11,8 +11,8 @@ source "$SCRIPT_DIR/utils.sh"
 setup_logging $JOB_LOG_DIR
 
 log_summary "Unmounting emulator vm shares."
-ensure_unmounted $EMU_VM_LOCAL_LOG_MOUNT -f
-ensure_unmounted $EMU_VM_LOCAL_RESULTS_MOUNT -f
+ensure_share_unmounted $EMU_VM_LOCAL_LOG_MOUNT -f
+ensure_share_unmounted $EMU_VM_LOCAL_RESULTS_MOUNT -f
 
 log_summary "Cleaning up local emulator packages."
 rm -f "$JOB_PACKAGES_DIR/$EMULATOR_ARCHIVE_NAME"
