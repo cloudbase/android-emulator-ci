@@ -34,6 +34,9 @@ ps_emu_vm "git clone $CI_GIT_REPO $EMU_VM_SCRIPTS_DIR"
 log_summary "Validating emulator vm prerequisites."
 start_emu_vm_job "check_prerequisites"
 
+log_summary "Enabling emulator vm RDP access."
+call_emu_vm_script "enable_rdp"
+
 log_summary "Transfering the sdk tools archive."
 ps_emu_vm "mkdir -force $EMU_VM_PACKAGES_DIR"
 ps_emu_vm "Invoke-WebRequest -Uri $ANDROID_SDK_URL" \

@@ -20,10 +20,10 @@ setup_logging $JOB_LOG_DIR
 # and then copying everything to the log server.
 
 log_summary "Exporting emulator vm log/results dirs."
-start_emu_vm_job "ensure_public_share" $EMU_VM_LOG_SHARE \
-                                       $EMU_VM_LOG_DIR
-start_emu_vm_job "ensure_public_share" $EMU_VM_RESULTS_SHARE \
-                                       $EMU_VM_TEST_RESULTS_DIR
+call_emu_vm_script "ensure_public_share" $EMU_VM_LOG_SHARE \
+                                         $EMU_VM_LOG_DIR
+call_emu_vm_script "ensure_public_share" $EMU_VM_RESULTS_SHARE \
+                                         $EMU_VM_TEST_RESULTS_DIR
 
 log_summary "Mounting emulator vm log/results dirs."
 mount_emu_vm_share $EMU_VM_LOG_SHARE $EMU_VM_LOCAL_LOG_MOUNT

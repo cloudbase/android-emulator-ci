@@ -38,6 +38,7 @@ trap err_trap ERR
 function err_trap () {
     local r=$?
     set +o xtrace
+    set +eE
 
     log_summary "${0##*/} failed."
 

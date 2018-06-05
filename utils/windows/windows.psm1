@@ -88,3 +88,12 @@ function check_windows_feature($featureName) {
         throw "The following Windows features are not enabled: $missingFeatures."
     }
 }
+
+function enable_rdp_access() {
+    log_message "Enabling RDP access."
+
+    Set-ItemProperty `
+        -Path "HKLM:\\System\\CurrentControlSet\\Control\\Terminal Server" `
+        -Name "fDenyTSConnections" -Value 0
+    Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+}

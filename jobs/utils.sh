@@ -68,8 +68,16 @@ function start_emu_vm_job () {
 
     ps_emu_vm "mkdir -Force $EMU_VM_LOG_DIR"
 
-    CMD="$EMU_VM_SCRIPTS_DIR\\test_host\\$JOB_NAME.ps1 $JOB_ARGS"
+    local CMD="$EMU_VM_SCRIPTS_DIR\\test_host\\$JOB_NAME.ps1 $JOB_ARGS"
     CMD="$CMD > $JOB_LOG_FILE 2>&1"
+
+    ps_emu_vm "$CMD"
+}
+
+function call_emu_vm_script () {
+    local SCRIPT_NAME=$(echo $1 | sed 's/\.ps1$//')
+    local SCRIPT_ARGS="${@:2}"
+    local CMD="$EMU_VM_SCRIPTS_DIR\\test_host\\$SCRIPT_NAME.ps1 $SCRIPT_ARGS"
 
     ps_emu_vm "$CMD"
 }
