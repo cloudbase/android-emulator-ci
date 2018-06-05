@@ -21,7 +21,6 @@ netsh advfirewall firewall add rule \
     name="SMB access" dir=in action=allow protocol=TCP \
     localport=445
 
-
 ensure_smb_share $shareName $sharePath
 grant_smb_share_access $shareName "Everyone" $accessRight
 

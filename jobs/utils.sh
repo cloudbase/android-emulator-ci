@@ -109,12 +109,17 @@ function mount_emu_vm_share () {
     local SHARE_NAME=$1
     local MOUNT_PATH=$2
 
-    required_vars=(EMU_VM_IP SHARE_NAME MOUNT_PATH)
+    required_vars=(EMU_VM_ID EMU_VM_IP VM_SSH_KEY \
+                   SHARE_NAME MOUNT_PATH)
     ensure_env_vars_set $required_vars
+
+    local EMU_VM_PASSWORD=$(nova get-password $EMU_VM_ID $VM_SSH_KEY)
 
     local SHARE_PATH="//$EMU_VM_IP/$SHARE_NAME"
     log_summary "Mounting $SHARE_PATH to $MOUNT_PATH."
 
     mkdir -p $MOUNT_PATH
-    sudo mount -t cifs -o guest $SHARE_PATH $MOUNT_PATH
+    sudo mount -t cifs -o \
+        username="$EMU_VM_USERNAME",password="$EMU_VM_PASSWORD" \
+        $SHARE_PATH $MOUNT_PATH
 }

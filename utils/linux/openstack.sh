@@ -46,6 +46,6 @@ function delete_vm_if_exists() {
         log_summary "Deleting vm $VM_ID"
         nova delete $VM_ID
     else
-        log_summary "VM $VM_ID does not exist. Skiiping delete."
+        log_summary "VM $VM_ID does not exist. Skipping delete."
     fi
 }
