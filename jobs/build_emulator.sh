@@ -41,7 +41,6 @@ ssh_builder_vm "SKIP_DEPS=$BUILDER_IMAGE_CACHE" \
                || emulator_build_failed="1"
 
 log_summary "Fetching builder logs."
-mkdir -p $LOCAL_BUILDER_LOG_DIR
 scp_builder_vm -r "$BUILDER_VM_USERNAME@$BUILDER_VM_IP:$BUILDER_LOG_DIR" \
                   "$LOCAL_BUILDER_LOG_DIR"
 
