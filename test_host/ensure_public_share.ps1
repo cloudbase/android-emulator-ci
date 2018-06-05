@@ -17,8 +17,8 @@ import-module "$scriptLocation\..\utils\windows\all.psm1"
 check_elevated
 
 log_message "Enabling 445 (SMB) port."
-netsh advfirewall firewall add rule \
-    name="SMB access" dir=in action=allow protocol=TCP \
+netsh advfirewall firewall add rule `
+    name="SMB access" dir=in action=allow protocol=TCP `
     localport=445
 
 ensure_smb_share $shareName $sharePath
