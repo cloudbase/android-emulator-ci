@@ -15,18 +15,23 @@ function cifs_to_unc_path () {
 function ensure_share_unmounted () {
     local MOUNT=$1
 
-    MOUNT=$(echo $MOUNT | tr "\\" "/")
-    local MOUNTED_SHARE=$(mount | tr "\\" "/" | \
-                          grep -E "(^| )$MOUNT " | awk '{print $1}')
+    MOUNT=$(echo $MOUNT | tr "\\" "/" 2> /dev/null)
+    local MOUNTPOINTS=$(mount | tr "\\" "/" 2> /dev/null | \
+                        grep -E "(^| )$MOUNT " | awk '{print $3}')
+    local MOUNTED_SHARE=$(mount | tr "\\" "/" 2> /dev/null | \
+                          grep -E "(^| )$MOUNT " | awk 'NR==1 {print $1}')
 
-    if [[ -z $MOUNTED_SHARE ]]; then
+    if [[ -z $MOUNTPOINTS ]]; then
         log_summary "\"$MOUNT\" is not mounted. Skipping unmount."
     else
-        log_summary "Unmounting \"$MOUNT\"."
-        sudo umount -f $MOUNT
+        for mountpoint in $MOUNTPOINTS; do
+            log_summary "Unmounting \"$MOUNTED_SHARE\" - \"$mountpoint\"."
+            sudo umount $mountpoint
+        done
 
         if [[ $(is_wsl) ]]; then
-            net.exe use $(cifs_to_unc_path $MOUNT) /delete
+            net.exe use $(cifs_to_unc_path $MOUNTED_SHARE) /delete || \
+                log_summary "Failed to remove SMB mapping through net use."
         fi
     fi
 }
