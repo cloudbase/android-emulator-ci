@@ -75,7 +75,7 @@ function start_emu_vm_job () {
 }
 
 function call_emu_vm_script () {
-    local SCRIPT_NAME=$(echo $1 | sed 's/\.ps1$//')
+    local SCRIPT_NAME="$(echo $1 | sed 's/\.ps1$//')"
     local SCRIPT_ARGS="${@:2}"
     local CMD="$EMU_VM_SCRIPTS_DIR\\test_host\\$SCRIPT_NAME.ps1 $SCRIPT_ARGS"
 
@@ -121,7 +121,8 @@ function mount_emu_vm_share () {
                    SHARE_NAME MOUNT_PATH)
     ensure_env_vars_set $required_vars
 
-    local EMU_VM_PASSWORD=$(nova get-password $EMU_VM_ID $VM_SSH_KEY)
+    local EMU_VM_PASSWORD
+    EMU_VM_PASSWORD=$(nova get-password $EMU_VM_ID $VM_SSH_KEY)
 
     local SHARE_PATH="//$EMU_VM_IP/$SHARE_NAME"
     log_summary "Mounting $SHARE_PATH to $MOUNT_PATH."
@@ -130,7 +131,8 @@ function mount_emu_vm_share () {
 
     if [[ $(is_wsl) ]]; then
         # WSL doesn't allow mounting SMB shares directly.
-        local SHARE_UNC_PATH=$(cifs_to_unc_path $SHARE_PATH)
+        local SHARE_UNC_PATH
+        SHARE_UNC_PATH=$(cifs_to_unc_path $SHARE_PATH)
         net.exe use $SHARE_UNC_PATH \
                     /user:$EMU_VM_USERNAME $EMU_VM_PASSWORD
         sudo mount -t drvfs $SHARE_UNC_PATH $MOUNT_PATH

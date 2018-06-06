@@ -1,5 +1,6 @@
 function boot_vm() {
-    local VMID=$(nova boot $@ --poll | grep " id " | cut -d "|" -f 3)
+    local VMID
+    VMID=$(nova boot $@ --poll | grep " id " | cut -d "|" -f 3)
     local NOVABOOT_EXIT=$?
 
     if [ $NOVABOOT_EXIT -ne 0 ]; then
@@ -13,8 +14,10 @@ function boot_vm() {
 
 function get_vm_ip() {
     local vmName=$1
-    local vms=`nova list | grep $vmName`
-    local vmCount=`echo $vms | wc -l`
+    local vms
+    local vmCount
+    vms=`nova list | grep $vmName`
+    vmCount=`echo $vms | wc -l`
 
     if [[ -z $vms ]]; then
         log_summary "Could not find vm $vmName."
@@ -26,7 +29,8 @@ function get_vm_ip() {
         return 1
     fi
 
-    local ip=`echo $vms | cut -d '|' -f 7 | sed -r 's/.*=//'`
+    local ip
+    ip=`echo $vms | cut -d '|' -f 7 | sed -r 's/.*=//'`
     if [[ -z $ip ]]; then
         log_summary "Failed to retrieve vm \"$vmName\" ip."
         return 1;

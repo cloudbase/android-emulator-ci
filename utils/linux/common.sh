@@ -21,7 +21,8 @@ function log_warning () {
 }
 
 function log_summary () {
-    local _XTRACE=$(set +o | grep xtrace)
+    local _XTRACE
+    _XTRACE=$(set +o | grep xtrace)
     set +o xtrace
     log_message "$@"
 
@@ -38,7 +39,6 @@ trap err_trap ERR
 function err_trap () {
     local r=$?
     set +o xtrace
-    set +eE
 
     log_summary "${0##*/} failed."
 
@@ -63,7 +63,7 @@ function setup_logging () {
         return
     fi
 
-    local default_log_name=$(basename $0 | sed 's/\..*//')
+    local default_log_name="$(basename $0 | sed 's/\..*//')"
     local log_dir=$1
     local log_name=${2:-$default_log_name}
 
