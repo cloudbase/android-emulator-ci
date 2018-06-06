@@ -133,3 +133,13 @@ function kill_if_running () {
 function is_wsl () {
     cat /proc/version | grep Microsoft
 }
+
+function str_to_bool () {
+    local str=${1,,}
+    if [[ $str == "1" || $str == "yes" || $str == "true" ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+}

@@ -142,3 +142,11 @@ function mount_emu_vm_share () {
             $SHARE_PATH $MOUNT_PATH
     fi
 }
+
+function cleanup_vm () {
+    if str_to_bool $SKIP_VM_CLEANUP; then
+        log_summary "Skipping vm cleanup: $1"
+    else
+        delete_vm_if_exists $@
+    fi
+}

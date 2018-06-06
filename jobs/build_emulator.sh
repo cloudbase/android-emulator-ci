@@ -69,6 +69,6 @@ scp_log_srv "$JOB_PACKAGES_DIR/$UNITTESTS_ARCHIVE_NAME" \
             "$LOG_SRV_USERNAME@$LOG_SRV:$LOG_SRV_JOB_PACKAGES_DIR"
 
 log_summary "Cleaning up builder vm."
-nova delete $BUILDER_VM_ID
+cleanup_vm $BUILDER_VM_ID
 
 mark_job_completed "build_emulator"

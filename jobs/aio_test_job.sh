@@ -11,7 +11,11 @@ function create_environment () {
 }
 
 function run_tests () {
-    $SCRIPT_DIR/run_tests.sh
+    if [ ! -z $SKIP_TESTS ]; then
+        $SCRIPT_DIR/run_tests.sh
+    else
+        echo "Skipping tests."
+    fi
 }
 
 function collect_logs () {
