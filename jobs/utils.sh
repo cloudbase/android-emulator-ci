@@ -139,7 +139,8 @@ function mount_emu_vm_share () {
     else
         sudo mount -t cifs -o \
             username="$EMU_VM_USERNAME",password="$EMU_VM_PASSWORD" \
-            $SHARE_PATH $MOUNT_PATH
+            $SHARE_PATH $MOUNT_PATH \
+            -o vers=3.0
     fi
 }
 
