@@ -142,4 +142,3 @@ function str_to_bool () {
         return 1
     fi
 }
-}
