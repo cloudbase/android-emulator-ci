@@ -57,7 +57,9 @@ $instanceBootTimeout = 600
 # brutally killing them.
 $softTimeoutRatio = 0.90
 
-$adtInfraRepoUrl = 'https://android.googlesource.com/platform/external/adt-infra'
+# $adtInfraRepoUrl = 'https://android.googlesource.com/platform/external/adt-infra'
+# Using a fork until some fixes are merged upstream.
+$adtInfraRepoUrl = 'https://github.com/petrutlucian94/adt-infra'
 $adtInfraBranch = "emu-master-dev"
 $adtInfraDir = "$androidRootDir\adt-infra"
 
