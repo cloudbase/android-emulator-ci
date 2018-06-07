@@ -100,6 +100,7 @@ function run_adt_emu_test_suite($testfilePattern) {
     $cmd = ("cmd /c " +
             "python `"$adtInfraDir\emu_test\dotest.py`" " +
             "--file_pattern=`"$testfilePattern`" " +
+            "--skip-adb-perf " +
             "--test_dir=$adtEmuTestResultDir " +
             "--session_dir=$adtEmuTestResultDir " +
             "--config_file=`"$emuTestCfgDir\test_cfg.csv`" " +
