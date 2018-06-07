@@ -7,7 +7,7 @@ SCRIPT_DIR=$(dirname "$BASH_SOURCE")
 source "$SCRIPT_DIR/job.rc"
 
 function create_environment () {
-    $SCRIPT_DIR/build_emulator.sh
+    $SCRIPT_DIR/create_environment.sh
 }
 
 function run_tests () {
