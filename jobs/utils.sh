@@ -88,7 +88,7 @@ function mark_job_completed () {
     local JOB_FILE="$FINISHED_JOBS_DIR/$JOB_NAME"
 
     log_summary "Job \"$JOB_NAME\" completed." \
-                "Return value: \"$JOB_RET_VAL\""
+                "Return value: $JOB_RET_VAL."
     mkdir -p $FINISHED_JOBS_DIR
     echo $JOB_RET_VAL > $JOB_FILE
 }
