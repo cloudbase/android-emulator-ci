@@ -13,13 +13,11 @@ function git_clone_pull($path, $url, $ref="master", $shallow=$false)
         if (!(Test-Path -path $path))
         {
             if ($shallow) {
-                git clone -b $ref $url $path --depth=1
+                safe_exec "git clone -b $ref $url $path --depth=1"
             }
             else {
-                git clone $url $path
+                safe_exec "git clone $url $path"
             }
-
-            if ($LastExitCode) { throw "git clone failed" }
 
             cd $path
         }
@@ -27,21 +25,13 @@ function git_clone_pull($path, $url, $ref="master", $shallow=$false)
         {
             cd $path
 
-            git remote set-url origin $url
-            if ($LastExitCode) { throw "git remote set-url failed" }
-
-            git reset --hard
-            if ($LastExitCode) { throw "git reset failed" }
-
-            git clean -f -d
-            if ($LastExitCode) { throw "git clean failed" }
-
-            git fetch
-            if ($LastExitCode) { throw "git fetch failed" }
+            safe_exec "git remote set-url origin $url"
+            safe_exec "git reset --hard"
+            safe_exec "git clean -f -d"
+            safe_exec "git fetch"
         }
 
-        git checkout $ref
-        if ($LastExitCode) { throw "git checkout failed" }
+        safe_exec "git checkout $ref"
 
         if ((git tag) -contains $ref) {
             log_message "Got tag $ref instead of a branch."
@@ -52,8 +42,7 @@ function git_clone_pull($path, $url, $ref="master", $shallow=$false)
             log_message "Skipping doing a pull."
         }
         else {
-            git pull
-            if ($LastExitCode) { throw "git pull failed" }
+            safe_exec "git pull"
         }
     }
     finally

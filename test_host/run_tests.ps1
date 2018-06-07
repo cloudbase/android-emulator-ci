@@ -28,7 +28,7 @@ function extract_unit_tests() {
 function prepare_adt_emu_tests() {
     git_clone_pull $adtInfraDir $adtInfraRepoUrl $adtInfraBranch `
                    -shallow $shallowGitClones
-    pip install psutil
+    safe_exec "pip install psutil"
 }
 
 function clear_test_stats() {

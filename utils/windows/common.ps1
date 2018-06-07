@@ -41,3 +41,14 @@ function iex_with_timeout() {
         remove-job $job
     }
 }
+
+function safe_exec($cmd) {
+    # The idea is to prevent powershell from treating stderr output
+    # as an error when calling executables, relying on the return code
+    # (which unfortunately doesn't always happen by default,
+    # especially in case of remote sessions).
+    cmd /c "$cmd 2>&1"
+    if ($LASTEXITCODE) {
+        throw "Command failed: $cmd"
+    }
+}
