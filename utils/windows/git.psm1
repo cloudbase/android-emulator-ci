@@ -5,7 +5,7 @@ $scriptLocation = [System.IO.Path]::GetDirectoryName(
 
 function git_clone_pull($path, $url, $ref="master", $shallow=$false)
 {
-    log_message "Cloning / pulling: $url, branch: $ref"
+    log_message "Cloning / pulling: $url, branch: $ref. Path: $path."
 
     pushd .
     try  
@@ -13,7 +13,7 @@ function git_clone_pull($path, $url, $ref="master", $shallow=$false)
         if (!(Test-Path -path $path))
         {
             if ($shallow) {
-                git clone $url $path --depth=1
+                git clone -b $ref $url $path --depth=1
             }
             else {
                 git clone $url $path
