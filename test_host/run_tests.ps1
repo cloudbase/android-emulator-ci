@@ -98,7 +98,7 @@ function run_adt_emu_test_suite($testfilePattern) {
     $emuTestCfgDir = "$scriptLocation\config\emu_test"
 
     $cmd = ("cmd /c " +
-            "python `"$adtInfraDir\emu_test\dotest.py`" " +
+            "'python `"$adtInfraDir\emu_test\dotest.py`" " +
             "--file_pattern=`"$testfilePattern`" " +
             "--skip-adb-perf " +
             "--test_dir=$adtEmuTestResultDir " +
@@ -106,7 +106,7 @@ function run_adt_emu_test_suite($testfilePattern) {
             "--config_file=`"$emuTestCfgDir\test_cfg.csv`" " +
             "--buildername=`"localhost`" " +
             "--timeout=$($integrationTestSuiteTimeout * $softTimeoutRatio) " +
-            "--boot_time=$instanceBootTimeout >> $adtEmuTestLog 2>&1")
+            "--boot_time=$instanceBootTimeout >> $adtEmuTestLog 2>&1'")
             # --avd_list $testAvdName
     log_message "Executing $cmd"
     iex_with_timeout $cmd $integrationTestSuiteTimeout
