@@ -16,8 +16,8 @@ $executedTestListFile = "$testResultsDir\executed_tests.txt"
 # Can't find a better name for those tests at the moment.
 $adtEmuTestResultDir = "$testResultsDir\adt_infra_emu_tests"
 $adtEmuTestLog = "$adtEmuTestResultDir\console.log"
-# $adtEmuEnabledTests = @("test_boot.py", "test_console.py", "test_ui.py")
-$adtEmuEnabledTests = @("test_boot.py")
+$adtEmuEnabledTests = @("test_boot.py", "test_console.py", "test_ui.py")
+# $adtEmuEnabledTests = @("test_boot.py")
 
 # Not sure yet if it's safe to use a separate dir.
 $emulatorUnitTestsDir = "$androidEmulatorDir\unittests"
