@@ -52,6 +52,12 @@ function notify_starting_test($testDescription, $testType) {
     echo "($testType) $testDescription" >> $executedTestListFile
 }
 
+function notify_successful_test($testDescription, $testType) {
+    log_message "($testType) $testDescription passed."
+
+    echo "($testType) $testDescription" >> $successfulTestListFile
+}
+
 function notify_failed_test($testDescription, $testType, $errMsg) {
     # We're going to resume running tests even if one of the suite fails,
     # throwing an error at the end of the run.
@@ -77,6 +83,7 @@ function run_gtests_from_dir($testdir, $resultDir, $pattern) {
         try {
             notify_starting_test $testName "unittest"
             run_gtest $testPath $resultDir $unitTestSuiteTimeout
+            notify_successful_test $testName "unittest"
         }
         catch {
             $errMsg = $_.Exception.Message
@@ -120,6 +127,7 @@ function run_adt_emu_tests() {
         try {
             notify_starting_test "$testfilePattern" "adt_emu_test"
             run_adt_emu_test_suite $testfilePattern
+            notify_successful_test "$testfilePattern" "adt_emu_test"
         }
         catch {
             $errMsg = $_.Exception.Message
