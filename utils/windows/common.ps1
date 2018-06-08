@@ -1,4 +1,5 @@
 $ErrorActionPreference = "Stop"
+$ProgressPreference = "SilentlyContinue"
 
 $scriptLocation = [System.IO.Path]::GetDirectoryName(
     $myInvocation.MyCommand.Definition)
@@ -13,6 +14,20 @@ function log_message($message) {
 }
 
 function iex_with_timeout() {
+    Param(
+        [Parameter(Mandatory=$true)]
+        [string]$cmd,
+        [Parameter(Mandatory=$true)]
+        [int]$timeoutSec
+    )
+
+    & "$scriptLocation\run_with_timeout.ps1" "$cmd" $timeoutSec
+}
+
+function _iex_with_timeout() {
+    # This is not completely safe. If the job times out while having
+    # children processes, its children will not be stopped. The calling
+    # script may hang because of this, especially when ran remotely.
     Param(
         [Parameter(Mandatory=$true)]
         [string]$cmd,
