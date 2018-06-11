@@ -162,7 +162,7 @@ function run_adt_emu_test_suite($testFileName) {
                  "Instance boot timeout: $instanceBootTimeout seconds.")
     $emuTestCfgDir = "$scriptLocation\config\emu_test"
     $logFile = Join-Path $adtEmuTestResultDir `
-                         $testFileName.Replace(".py", "") + ".log"
+                         ($testFileName.Replace(".py", "") + ".log")
 
     $cmd = ("cmd /c " +
             "'python `"$adtInfraDir\emu_test\dotest.py`" " +
