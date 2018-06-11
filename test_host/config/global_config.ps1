@@ -5,6 +5,7 @@ $androidAvdDir = "$androidEmulatorHome\avd"
 $androidEmulatorDir = "$androidSdkRoot\emulator"
 $androidUserAdvancedFeatures = "$androidEmulatorHome\advancedFeatures.ini"
 $androidPlatformToolsDir = "$androidSdkRoot\platform-tools"
+$androidEmulatorBinDir = "$androidEmulatorDir\bin"
 $androidSdkToolsBinDir = "$androidRootDir\sdk\bin"
 
 # $logDir = "$androidRootDir\log"
@@ -24,6 +25,8 @@ $adtEmuEnabledTests = @("test_boot.py", "test_console.py", "test_ui.py")
 $isolatedUnitTests=@{
     "android_emu(64)?_unittests.exe"=`
         @("RamSaverTest.*", "RamSnapshotTest.*");
+    "android_emu_unittests.exe"=`
+        @("RamLoaderTest.Simple");
     "android_emu64_unittests.exe"=`
         @("LazyInstance.MultipleThreads", "OnDemandTest.multiConstruct")}
 
@@ -35,6 +38,8 @@ $emulatorUnitTestsDir = "$androidEmulatorDir\unittests"
 # it will also have enough space for our needs.
 $androidTempDir = "$androidRootDir\tmp"
 
+$gradleHomeDir="~\.gradle"
+$gradleInitFile="$gradleHomeDir\init.gradle"
 $androidDefaultHomeDir = "~\.android"
 $androidDefaultAvdDir = "$androidDefaultHomeDir\avd"
 

@@ -33,6 +33,17 @@ function extract_sdk_archive() {
     extract_zip $androidSdkArchive $androidSdkRoot
 }
 
+
+function set_gradle_init_script() {
+    # We're explicitly setting a maven repo in order to ensure
+    # that test dependencies will be available.
+    $templateInitFile = "$scriptLocation\config\init.gradle"
+
+    ensure_dir_exists $gradleHomeDir
+    gc $templateInitFile | sc $gradleInitFile
+}
+
+
 function install_sdk_packages() {
     $sdkPackagesFile = "$scriptLocation\config\sdk_packages.txt"
     check_path $sdkPackagesFile
