@@ -74,6 +74,7 @@ install_sdk_packages
 # We'll take care of it at this stage.
 add_to_env_path "$androidPlatformToolsDir"
 add_to_env_path "$androidSdkToolsBinDir"
+add_to_env_path "$androidEmulatorBinDir"
 
 # Some quick sanity checks, validating the sdk executables.
 ensure_binary_available "adb"
