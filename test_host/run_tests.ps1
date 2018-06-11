@@ -32,13 +32,13 @@ function prepare_adt_emu_tests() {
 }
 
 function clear_test_stats() {
-    $env:TEST_FAILED = $false
+    $env:TEST_FAILED = "0"
     echo "" > $failedTestListFile
     echo "" > $executedTestListFile
 }
 
 function validate_test_run() {
-    if ($env:TEST_FAILED) {
+    if ($env:TEST_FAILED -ne "0") {
         # TODO: We may actually list them.
         throw "One or more test suites have failed"
     }
@@ -61,7 +61,7 @@ function notify_successful_test($testDescription, $testType) {
 function notify_failed_test($testDescription, $testType, $errMsg) {
     # We're going to resume running tests even if one of the suite fails,
     # throwing an error at the end of the run.
-    $env:TEST_FAILED = $true
+    $env:TEST_FAILED = "1"
 
     log_message "($testType) $testDescription failed. Error: $errMsg"
 
@@ -87,18 +87,20 @@ function prepare_lib_paths() {
     }
 }
 
-function get_isolated_unit_tests($testFileName) {
+function get_isolated_tests($testFileName, $isolatedTestsMapping) {
     $isolatedTests = @()
-    foreach ($isolatedTestPattern in $isolatedUnitTests.Keys) {
+    foreach ($isolatedTestPattern in $isolatedTestsMapping.Keys) {
         if ($testFileName -match $isolatedTestPattern) {
-            $isolatedTests += $isolatedUnitTests[$isolatedTestPattern]
+            $isolatedTests += $isolatedTestsMapping[$isolatedTestPattern]
         }
     }
     $isolatedTests
 }
 
 function run_gtests_from_dir($testdir, $resultDir, $pattern,
-                             $runIsolatedTests=$false) {
+                             $isolatedTestsMapping,
+                             $runIsolatedTests,
+                             $testType) {
     $testList = ls -Recurse $testdir | `
                 ? { $_.Name -match $pattern }
 
@@ -106,38 +108,48 @@ function run_gtests_from_dir($testdir, $resultDir, $pattern,
         $testName = $testBinary.Name
         $testPath = $testBinary.FullName
 
-        $isolatedTests = get_isolated_unit_tests $testName
-        $unitTestsFilter = $isolatedTests -join ":"
+        $isolatedTests = get_isolated_tests $testName $isolatedTestsMapping
+        $testFilter = $isolatedTests -join ":"
         if (! $runIsolatedTests) {
-            $testDescription = "unittest"
-            $unitTestsFilter = "-$unitTestsFilter"
+            $testFilter = "-$testFilter"
         }
         else {
-            $testDescription = "unittest_isolated"
+            if (! $isolatedTests ) {
+                # No isolated tests for this suite.
+                continue
+            }
         }
 
         try {
-            notify_starting_test $testName $testDescription
+            notify_starting_test $testName $testType
             run_gtest $testPath $resultDir `
-                      $unitTestSuiteTimeout $unitTestsFilter
-            notify_successful_test $testName $testDescription
+                      $unitTestSuiteTimeout $testFilter
+            notify_successful_test $testName $testType
         }
         catch {
             $errMsg = $_.Exception.Message
-            notify_failed_test $testName $testDescription $errMsg
+            notify_failed_test $testName $testType $errMsg
         }
     }
 }
 
 function run_unit_tests() {
     log_message "Running unit tests."
-    run_gtests_from_dir $emulatorUnitTestsDir `
-                        $unitTestResultsDir "unittests.exe"
+    run_gtests_from_dir -testdir $emulatorUnitTestsDir `
+                        -resultDir $unitTestResultsDir `
+                        -pattern "unittests.exe" `
+                        -isolatedTestsMapping $isolatedUnitTests `
+                        -runIsolatedTests $false `
+                        -testType "unittests"
 
     # Various tests that are known to crash or hang.
     log_message "Running isolated unit tests."
-    run_gtests_from_dir $emulatorUnitTestsDir `
-                        $unitTestResultsDir "unittests.exe"
+    run_gtests_from_dir -testdir $emulatorUnitTestsDir `
+                        -resultDir $isolatedUnitTestResultsDir `
+                        -pattern "unittests.exe" `
+                        -isolatedTestsMapping $isolatedUnitTests `
+                        -runIsolatedTests $true `
+                        -testType "unittests_isolated"
 }
 
 function run_adt_emu_test_suite($testfilePattern) {
