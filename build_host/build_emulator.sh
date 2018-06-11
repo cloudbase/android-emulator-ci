@@ -110,6 +110,7 @@ function package_unitests () {
     # while being required by some of the unit tests.
     find . -name "*emugl_test_shared_library*" | \
         grep -v "/build" >> $TMP_FILE_LIST
+    find . | grep testdata >> $TMP_FILE_LIST
 
     tar -czf $UNITTESTS_PACKAGE_ARCHIVE -T $TMP_FILE_LIST
 
