@@ -61,6 +61,7 @@ if (!($skipCleanup)){
     . "$scriptLocation\remove_emulator.ps1"
 }
 
+set_env "ANDROID_HOME" $androidSdkRoot
 set_env "ANDROID_SDK_ROOT" $androidSdkRoot
 set_env "ANDROID_EMULATOR_HOME" $androidEmulatorHome
 set_env "ANDROID_EMULATOR_LAUNCHER_DIR" $androidEmulatorDir
