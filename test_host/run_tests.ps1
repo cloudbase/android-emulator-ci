@@ -94,18 +94,22 @@ function run_gtests_from_dir($testdir, $resultDir, $pattern,
         $isolatedTests = get_isolated_unit_tests $testName
         $unitTestsFilter = $isolatedTests -join ":"
         if (! $runIsolatedTests) {
+            $testDescription = "unittest"
             $unitTestsFilter = "-$unitTestsFilter"
+        }
+        else {
+            $testDescription = "unittest_isolated"
         }
 
         try {
-            notify_starting_test $testName "unittest"
+            notify_starting_test $testName $testDescription
             run_gtest $testPath $resultDir `
                       $unitTestSuiteTimeout $unitTestsFilter
-            notify_successful_test $testName "unittest"
+            notify_successful_test $testName $testDescription
         }
         catch {
             $errMsg = $_.Exception.Message
-            notify_failed_test $testName "unittest" $errMsg
+            notify_failed_test $testName $testDescription $errMsg
         }
     }
 }
