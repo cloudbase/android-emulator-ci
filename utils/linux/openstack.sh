@@ -1,12 +1,16 @@
 function boot_vm() {
     local VMID
+    set +eE
+    # TODO: separate vm status polling so that we can clean it up
+    # properly when one of the parallel jobs fails.
     VMID=$(nova boot $@ --poll | grep " id " | cut -d "|" -f 3)
     local NOVABOOT_EXIT=$?
+    set -eE
 
     if [ $NOVABOOT_EXIT -ne 0 ]; then
         nova show "$VMID"
         nova delete $VMID
-        log_summary "Failed to create devstack VM: $VMID"
+        log_summary "Failed to create VM: $VMID"
         return 1
     fi
     echo $VMID
