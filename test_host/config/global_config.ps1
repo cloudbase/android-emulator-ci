@@ -17,7 +17,6 @@ $executedTestListFile = "$testResultsDir\executed_tests.txt"
 $successfulTestListFile = "$testResultsDir\successful_tests.txt"
 # Can't find a better name for those tests at the moment.
 $adtEmuTestResultDir = "$testResultsDir\adt_infra_emu_tests"
-$adtEmuTestLog = "$adtEmuTestResultDir\console.log"
 $adtEmuEnabledTests = @("test_boot.py", "test_console.py", "test_ui.py")
 # $adtEmuEnabledTests = @("test_boot.py")
 # Those tests are known to crash (possibly testing features that are
