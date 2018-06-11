@@ -40,6 +40,7 @@ $androidTempDir = "$androidRootDir\tmp"
 
 $gradleHomeDir="~\.gradle"
 $gradleInitFile="$gradleHomeDir\init.gradle"
+
 $androidDefaultHomeDir = "~\.android"
 $androidDefaultAvdDir = "$androidDefaultHomeDir\avd"
 
@@ -63,8 +64,8 @@ $msysBinDir = "C:\msys\1.0\bin"
 # emulator integration tests, using the global "--timeout" value
 # as boot timeout.
 $unitTestSuiteTimeout = 300
-# 30 min should be enough for integration test suites (omitting CTS for now).
-$integrationTestSuiteTimeout = 1500
+# 60 min should be enough for integration test suites (omitting CTS for now).
+$integrationTestSuiteTimeout = 3600
 $instanceBootTimeout = 600
 # The ratio between soft timeout and hard timeout. We're using soft timeouts
 # for the tests, giving them time to clean up and publish results, before
