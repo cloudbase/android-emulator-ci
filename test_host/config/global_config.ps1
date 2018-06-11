@@ -19,6 +19,9 @@ $adtEmuTestResultDir = "$testResultsDir\adt_infra_emu_tests"
 $adtEmuTestLog = "$adtEmuTestResultDir\console.log"
 $adtEmuEnabledTests = @("test_boot.py", "test_console.py", "test_ui.py")
 # $adtEmuEnabledTests = @("test_boot.py")
+# Those tests are known to crash (possibly testing features that are
+# unsupported on Windows), we'll avoid them for now.
+$unitTestsFilter = "-RamSaverTest.*:RamSnapshotTest.*"
 
 # Not sure yet if it's safe to use a separate dir.
 $emulatorUnitTestsDir = "$androidEmulatorDir\unittests"

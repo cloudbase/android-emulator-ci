@@ -82,7 +82,8 @@ function run_gtests_from_dir($testdir, $resultDir, $pattern) {
 
         try {
             notify_starting_test $testName "unittest"
-            run_gtest $testPath $resultDir $unitTestSuiteTimeout
+            run_gtest $testPath $resultDir `
+                      $unitTestSuiteTimeout $unitTestsFilter
             notify_successful_test $testName "unittest"
         }
         catch {
