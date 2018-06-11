@@ -10,6 +10,7 @@ $androidSdkToolsBinDir = "$androidRootDir\sdk\bin"
 # $logDir = "$androidRootDir\log"
 $testResultsDir = "$androidRootDir\test_results"
 $unitTestResultsDir = "$testResultsDir\unittests"
+$isolatedUnitTestResultsDir = "$testResultsDir\unittests\isolated"
 # We're going to use a single file providing info about failed tests.
 $failedTestListFile = "$testResultsDir\failed_tests.txt"
 $executedTestListFile = "$testResultsDir\executed_tests.txt"
@@ -20,8 +21,12 @@ $adtEmuTestLog = "$adtEmuTestResultDir\console.log"
 $adtEmuEnabledTests = @("test_boot.py", "test_console.py", "test_ui.py")
 # $adtEmuEnabledTests = @("test_boot.py")
 # Those tests are known to crash (possibly testing features that are
-# unsupported on Windows), we'll avoid them for now.
-$unitTestsFilter = "-RamSaverTest.*:RamSnapshotTest.*"
+# unsupported on Windows), we'll isolate them for now.
+$isolatedUnitTests=@{
+    "android_emu(64)?_unittests.exe"=`
+        @("RamSaverTest.*", "RamSnapshotTest.*");
+    "android_emu64_unittests.exe"=`
+        @("LazyInstance.MultipleThreads", "OnDemandTest.multiConstruct")}
 
 # Not sure yet if it's safe to use a separate dir.
 $emulatorUnitTestsDir = "$androidEmulatorDir\unittests"

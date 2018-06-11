@@ -72,13 +72,30 @@ function notify_failed_test($testDescription, $testType, $errMsg) {
     echo "" >> $failedTestListFile
 }
 
-function run_gtests_from_dir($testdir, $resultDir, $pattern) {
+function get_isolated_unit_tests($testFileName) {
+    $isolatedTests = @()
+    foreach ($isolatedTestPattern in $isolatedUnitTests.Keys) {
+        if ($testFileName -match $isolatedTestPattern) {
+            $isolatedTests += $isolatedUnitTests[$isolatedTestPattern]
+        }
+    }
+    $isolatedTests
+}
+
+function run_gtests_from_dir($testdir, $resultDir, $pattern,
+                             $runIsolatedTests=$false) {
     $testList = ls -Recurse $testdir | `
                 ? { $_.Name -match $pattern }
 
     foreach($testBinary in $testList) {
         $testName = $testBinary.Name
         $testPath = $testBinary.FullName
+
+        $isolatedTests = get_isolated_unit_tests $testName
+        $unitTestsFilter = $isolatedTests -join ":"
+        if (! $runIsolatedTests) {
+            $unitTestsFilter = "-$unitTestsFilter"
+        }
 
         try {
             notify_starting_test $testName "unittest"
@@ -95,6 +112,11 @@ function run_gtests_from_dir($testdir, $resultDir, $pattern) {
 
 function run_unit_tests() {
     log_message "Running unit tests."
+    run_gtests_from_dir $emulatorUnitTestsDir `
+                        $unitTestResultsDir "unittests.exe"
+
+    # Various tests that are known to crash or hang.
+    log_message "Running isolated unit tests."
     run_gtests_from_dir $emulatorUnitTestsDir `
                         $unitTestResultsDir "unittests.exe"
 }
@@ -140,6 +162,7 @@ function run_adt_emu_tests() {
 
 rm $failedTestListFile -ErrorAction SilentlyContinue
 ensure_dir_exists $unitTestResultsDir
+ensure_dir_exists $isolatedUnitTestResultsDir
 
 extract_unit_tests
 prepare_adt_emu_tests
