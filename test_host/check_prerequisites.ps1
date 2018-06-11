@@ -10,7 +10,7 @@ import-module "$scriptLocation\..\utils\windows\all.psm1"
 check_windows_feature "HypervisorPlatform"
 $javaHome = $env:JAVA_HOME
 if (!($javaHome)) {
-    throw "JAVA_HOME is not set. Please install JRE/JDK 8."
+    throw "JAVA_HOME is not set. Please install JDK 8."
 }
 
 check_path $env:JAVA_HOME

@@ -16,7 +16,8 @@ Sdk requirements
 * Android sdk archive
 * Android emulator archive
 * msys
-* jre 1.8 (1.10 doesn't work)
+* jdk 8 (10 doesn't work)
+    * make sure to add a firewall exception
 
 Test requirements
 -----------------
