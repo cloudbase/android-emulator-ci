@@ -72,6 +72,21 @@ function notify_failed_test($testDescription, $testType, $errMsg) {
     echo "" >> $failedTestListFile
 }
 
+function prepare_lib_paths() {
+    log_message "Adding emulator library paths to %PATH%."
+    foreach ($baseLibDir in @("$androidEmulatorDir\lib64",
+                              "$androidEmulatorDir\lib")) {
+        $libDirs = @(
+            "$baseLibDir"
+            "$baseLibDir\qt\lib"
+            "$baseLibDir\gles_angle11"
+            "$baseLibDir\gles_angle9"
+            "$baseLibDir\gles_angle"
+            "$baseLibDir\gles_swiftshader")
+        $libDirs | % {add_to_env_path $_}
+    }
+}
+
 function get_isolated_unit_tests($testFileName) {
     $isolatedTests = @()
     foreach ($isolatedTestPattern in $isolatedUnitTests.Keys) {
@@ -170,6 +185,7 @@ ensure_dir_exists $isolatedUnitTestResultsDir
 
 extract_unit_tests
 prepare_adt_emu_tests
+prepare_lib_paths
 
 clear_test_stats
 
