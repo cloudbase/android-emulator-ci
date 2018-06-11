@@ -32,7 +32,7 @@ function prepare_adt_emu_tests() {
     safe_exec "pip install requests"
 
     # The emulator python test modules must be importable.
-    add_to_env_path $adtInfraBranch -var PYTHONPATH
+    add_to_env_path $adtInfraDir -var PYTHONPATH
 }
 
 function clear_test_stats() {

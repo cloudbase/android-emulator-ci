@@ -25,18 +25,26 @@ function set_env($key, $val, $target="User") {
     _set_env $key $val "Process"
 }
 
+function get_env($var) {
+    [System.Environment]::GetEnvironmentVariable($var)
+}
+
 function env_path_var_contains($path, $var="PATH") {
     # This may used for %PATH% and similar environment variables,
     # e.g. PYHTONPATH.
     $normPath = $path.Replace("\", "\\").Trim("\")
-    [System.Environment]::GetenvironmentVariable($var) `
-        -imatch "(?:^|;)$normPath\\?(?:$|;)"
+    get_env $var `
+            -imatch "(?:^|;)$normPath\\?(?:$|;)"
 }
 
 function add_to_env_path($path, $target="User", $var="PATH"){
     if (!(env_path_var_contains $path $var)) {
         log_message "Adding `"$path`" to %$var%."
-        set_env $var "$env:Path;$path" $target
+
+        $currentPath = get_env $var
+        $newPath = "$currentPath;$path".Trim(";")
+
+        set_env $var $newPath $target
     }
     else {
         log_message "%$var% already contains `"$path`"."
