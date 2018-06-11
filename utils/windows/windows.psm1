@@ -33,8 +33,7 @@ function env_path_var_contains($path, $var="PATH") {
     # This may used for %PATH% and similar environment variables,
     # e.g. PYHTONPATH.
     $normPath = $path.Replace("\", "\\").Trim("\")
-    get_env $var `
-            -imatch "(?:^|;)$normPath\\?(?:$|;)"
+    (get_env $var) -imatch "(?:^|;)$normPath\\?(?:$|;)"
 }
 
 function add_to_env_path($path, $target="User", $var="PATH"){
