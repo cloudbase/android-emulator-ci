@@ -1,6 +1,86 @@
 About
 =====
 
-This repository contains scripts that will be used for provinding a CI test
+This repository contains scripts that are used for provinding a CI test
 infrastructure, covering Android Emulator, with a specific interest in the
 WHPX (Windows Hypervisor Platform) accelerator.
+
+Workflow
+========
+For each test run, we're rebuilding the emulator (currently using the tip of
+the master dev branch, soon we'll add support for testing Gerrit patches or
+certain branches/tags).
+
+We're currently relying on OpenStack to provision VMs that are used for
+building the emulator and running the emulator tests.
+
+This basically means that emulator instances are running nested, for which
+reason the underlying compute host must use Windows Server 2016 RS4 (1803),
+while the Windows guests will use Windows 10 RS4 or newer.
+
+To speed things up, we're building the emulator while the Windows VM is
+provisioned and the Android SDK gets installed. The AOSP tree is cached on the
+builder VM image, also containing ccache output from a previous run.
+
+This way, we get a test environment up in less than 15 minutes (which can
+also be used for dev/testing purposes).
+
+The logs, test results along with build packages are pushed to a configured
+log server.
+
+The top level job [scripts](jobs) are executed on a Linux host (in our
+case, through Jenkins), which in turn invoke commands on the Windows VM
+through WinRM.
+
+Each job will use a state dir at a configured location, containing various
+logs, SMB share mounts, as well as a file storing various information
+about the job (e.g. VM IDs and IPs).
+
+If configured to do so, various stages may be omitted (e.g. VM cleanup,
+useful for debugging purposes).
+
+Performed tests
+===============
+We're running the in-tree android emulator unit tests, along with the
+integration tests from
+[adt-infra](https://android.googlesource.com/platform/external/adt-infra/emu_tests).
+
+Some unit tests that are known to be crashing or hanging are run isolated
+so that this won't impact the rest of the unit test suite.
+
+Because of the same reason, we're using fine grained timeouts, ensuring that
+even if something hangs, we'll get as much coverage as possible from a single
+test run.
+
+The test results will include XMLs as well as raw console output (from the
+test themselves, as well as emulator instances).
+
+The top dir will contain a few files, each having a list of:
+* executed test suites
+* failed test suites
+* successful test suites
+
+In the future, we'll look into better ways of aggregating the test results.
+
+Configuration
+=============
+The top level job [configuration](jobs/job.rc) provides some default config
+values that can easily be overriden through environment variables. The same
+applies to the builder [config](build_host/build.rc).
+
+The Windows scripts also have a [config](test_host/global_config.ps1), but
+it's pretty much hardcoded. Using environment variables there would only
+make sense if used outside the scope of the CI automation.
+
+Authentication
+==============
+OpenStack access information must be provided through environment variables,
+automatically getting picked up by the OpenStack clients.
+
+Various SSH keys and certificates stored at configured locations are used
+when accessing the VMs and log server.
+
+Logging
+=======
+The bash script logs are extremely verbose, having xtrace enabled. Each
+of those scripts will also write a summary log.
