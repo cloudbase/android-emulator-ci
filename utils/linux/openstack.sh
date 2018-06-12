@@ -20,25 +20,27 @@ function wait_for_instance_state () {
     INSTANCE_STATE=$(get_instance_state $INSTANCE_ID)
 
     while [[ $SECONDS -lt $TIMEOUT ]] && \
-            [[ ! ( $INSTANCE_STATE =~ "ERROR" \
+            [[ ! ( ${INSTANCE_STATE^^} =~ "ERROR" \
                 || $INSTANCE_STATE == $EXPECTED_STATE ) ]]; do
 
         sleep $POLL_INTERVAL
         INSTANCE_STATE=$(get_instance_state $INSTANCE_ID)
     done
 
-    if [[ $INSTANCE_STATE =~ "ERROR" ]]; then
-        log_summary "Instance $INSTANCE_ID entered error state."
+    if [[ ${INSTANCE_STATE^^} =~ "ERROR" ]]; then
+        log_summary "Instance $INSTANCE_ID entered error state"\
+                    "($INSTANCE_STATE)."
         return 1
     fi
 
     if [[ $INSTANCE_STATE != $EXPECTED_STATE ]]; then
         log_summary "Timeout ($SECONDS s) waiting for instance" \
-                    "$INSTANCE_ID to become $EXPECTED_STATE."
+                    "$INSTANCE_ID to become $EXPECTED_STATE." \
+                    "Current state: $INSTANCE_STATE."
         return 1
     else
         log_summary "Instance $INSTANCE_ID reached expected" \
-                    "state $INSTANCE_STATE."
+                    "state: $INSTANCE_STATE."
     fi
 }
 
