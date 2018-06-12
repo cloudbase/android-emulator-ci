@@ -1,5 +1,7 @@
 #!/bin/bash
 
+basedir_utils=$(dirname "$BASH_SOURCE")
+
 TIMESTAMP_FORMAT=${TIMESTAMP_FORMAT:-"%F_%H:%M:%S%:::z"}
 
 set -o pipefail
@@ -141,4 +143,14 @@ function str_to_bool () {
     else
         return 1
     fi
+}
+
+function log_git_info () {
+    pushd $basedir_utils
+
+    git status
+    git remote -v
+    git log -n 5 --oneline
+
+    popd
 }
