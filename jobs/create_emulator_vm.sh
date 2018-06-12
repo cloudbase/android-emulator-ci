@@ -20,6 +20,7 @@ EMU_VM_ID=$(boot_vm \
             --key-name $KEYPAIR_NAME \
             $EMU_VM_NAME)
 set_job_state_var EMU_VM_ID $EMU_VM_ID
+wait_for_instance_boot $EMU_VM_ID $VM_BOOT_TIMEOUT
 
 EMU_VM_IP=$(get_vm_ip $EMU_VM_ID)
 set_job_state_var EMU_VM_IP $EMU_VM_IP

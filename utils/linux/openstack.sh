@@ -1,11 +1,71 @@
+function get_instance_state() {
+    local INSTANCE_ID=$1
+    ensure_env_vars_set INSTANCE_ID
+    nova show $INSTANCE_ID | grep " status  " | awk '{print $4}'
+}
+
+function wait_for_instance_state () {
+    local INSTANCE_ID=$1
+    local EXPECTED_STATE=$2
+    local TIMEOUT={$3:-180}
+    local POLL_INTERVAL=${4:-2}
+    local INSTANCE_STATE
+
+    SECONDS=0
+    TRIES=0
+
+    required_vars=(INSTANCE_ID EXPECTED_STATE TIMEOUT POLL_INTERVAL)
+    ensure_env_vars_set $required_vars
+
+    INSTANCE_STATE=$(get_instance_state $INSTANCE_ID)
+
+    while [[ $SECONDS -lt $TIMEOUT ]] && \
+            [[ ! ( $INSTANCE_STATE =~ "ERROR" \
+                || $INSTANCE_STATE == $EXPECTED_STATE ) ]]; do
+
+        sleep $POLL_INTERVAL
+        INSTANCE_STATE=$(get_instance_state $INSTANCE_ID)
+    done
+
+    if [[ $INSTANCE_STATE =~ "ERROR" ]]; then
+        log_summary "Instance $INSTANCE_ID entered error state."
+        return 1
+    fi
+
+    if [[ $INSTANCE_STATE != $EXPECTED_STATE ]]; then
+        log_summary "Timeout ($SECONDS s) waiting for instance" \
+                    "$INSTANCE_ID to become $EXPECTED_STATE."
+        return 1
+    else
+        log_summary "Instance $INSTANCE_ID reached expected" \
+                    "state $INSTANCE_STATE."
+    fi
+}
+
+function wait_for_instance_boot () {
+    local INSTANCE_ID=$1
+    local TIMEOUT={$3:-180}
+    local POLL_INTERVAL=${4:-2}
+
+    required_vars=(INSTANCE_ID EXPECTED_STATE TIMEOUT POLL_INTERVAL)
+    ensure_env_vars_set $required_vars
+
+    wait_for_instance_state $INSTANCE_ID "ACTIVE" $TIMEOUT $POLL_INTERVAL
+}
+
 function boot_vm() {
+    # This function doesn't wait for the instance to spawn, call
+    # 'wait_for_instance_boot' after booting the vm.
     local VMID
+    local _ERR_OPTS
+
+    _ERR_OPTS=$(set +o | grep err)
     set +eE
-    # TODO: separate vm status polling so that we can clean it up
-    # properly when one of the parallel jobs fails.
-    VMID=$(nova boot $@ --poll | grep " id " | cut -d "|" -f 3)
+
+    VMID=$(nova boot $@ | grep " id " | cut -d "|" -f 3)
+
     local NOVABOOT_EXIT=$?
-    set -eE
+    $_ERR_OPTS
 
     if [ $NOVABOOT_EXIT -ne 0 ]; then
         nova show "$VMID"

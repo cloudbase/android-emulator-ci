@@ -20,6 +20,7 @@ BUILDER_VM_ID=$(boot_vm \
                 --key-name $KEYPAIR_NAME \
                 $BUILDER_VM_NAME)
 set_job_state_var BUILDER_VM_ID $BUILDER_VM_ID
+wait_for_instance_boot $BUILDER_VM_ID $VM_BOOT_TIMEOUT
 
 BUILDER_VM_IP=$(get_vm_ip $BUILDER_VM_ID)
 set_job_state_var BUILDER_VM_IP $BUILDER_VM_IP
