@@ -7,7 +7,7 @@ function get_instance_state() {
 function wait_for_instance_state () {
     local INSTANCE_ID=$1
     local EXPECTED_STATE=$2
-    local TIMEOUT={$3:-180}
+    local TIMEOUT=${3:-180}
     local POLL_INTERVAL=${4:-2}
     local INSTANCE_STATE
 
@@ -46,8 +46,8 @@ function wait_for_instance_state () {
 
 function wait_for_instance_boot () {
     local INSTANCE_ID=$1
-    local TIMEOUT={$3:-180}
-    local POLL_INTERVAL=${4:-2}
+    local TIMEOUT=${2:-180}
+    local POLL_INTERVAL=${3:-2}
 
     required_vars=(INSTANCE_ID EXPECTED_STATE TIMEOUT POLL_INTERVAL)
     ensure_vars_set $required_vars
