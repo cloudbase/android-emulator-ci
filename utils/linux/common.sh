@@ -88,7 +88,7 @@ function setup_logging () {
     LOGGING_CONFIGURED="1"
 }
 
-function ensure_env_vars_set () {
+function ensure_vars_set () {
     local MISSING_VARS=()
 
     while test $# -gt 0

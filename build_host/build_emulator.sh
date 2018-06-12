@@ -15,7 +15,7 @@ setup_logging $BUILD_LOG_DIR
 REQUIRED_ENV_VARS=(AOSP_DIR AOSP_BRANCH \
                    BUILD_LOG_DIR OUTPUT_PACKAGE_DIR \
                    UNITTESTS_ARCHIVE_NAME)
-ensure_env_vars_set ${REQUIRED_ENV_VARS[@]}
+ensure_vars_set ${REQUIRED_ENV_VARS[@]}
 
 # We'll try to use the same volume as much as possible.
 TMP_PKG_DIR="$OUTPUT_PACKAGE_DIR/ae_build_tmp"

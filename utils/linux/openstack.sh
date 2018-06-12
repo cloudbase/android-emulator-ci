@@ -1,6 +1,6 @@
 function get_instance_state() {
     local INSTANCE_ID=$1
-    ensure_env_vars_set INSTANCE_ID
+    ensure_vars_set INSTANCE_ID
     nova show $INSTANCE_ID | grep " status  " | awk '{print $4}'
 }
 
@@ -15,7 +15,7 @@ function wait_for_instance_state () {
     TRIES=0
 
     required_vars=(INSTANCE_ID EXPECTED_STATE TIMEOUT POLL_INTERVAL)
-    ensure_env_vars_set $required_vars
+    ensure_vars_set $required_vars
 
     INSTANCE_STATE=$(get_instance_state $INSTANCE_ID)
 
@@ -48,7 +48,7 @@ function wait_for_instance_boot () {
     local POLL_INTERVAL=${4:-2}
 
     required_vars=(INSTANCE_ID EXPECTED_STATE TIMEOUT POLL_INTERVAL)
-    ensure_env_vars_set $required_vars
+    ensure_vars_set $required_vars
 
     wait_for_instance_state $INSTANCE_ID "ACTIVE" $TIMEOUT $POLL_INTERVAL
 }
