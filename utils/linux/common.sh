@@ -102,7 +102,7 @@ function ensure_env_vars_set () {
     done
 
     if [ ! -z $MISSING_VARS ]; then
-        die "The following environment variables must" \
+        die "The following variables must" \
             "be set: ${MISSING_VARS[@]}"
     fi
 }
