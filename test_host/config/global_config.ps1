@@ -19,6 +19,9 @@ $successfulTestListFile = "$testResultsDir\successful_tests.txt"
 # Can't find a better name for those tests at the moment.
 $adtEmuTestResultDir = "$testResultsDir\adt_infra_emu_tests"
 $adtEmuEnabledTests = @("test_boot.py", "test_console.py", "test_ui.py")
+# UI tests seem to take quite a while.
+$customTestTimeout=@{"test_ui.py"=10800;
+                     "test_console.py"=1800}
 # $adtEmuEnabledTests = @("test_boot.py")
 # Those tests are known to crash (possibly testing features that are
 # unsupported on Windows), we'll isolate them for now.
@@ -65,7 +68,7 @@ $msysBinDir = "C:\msys\1.0\bin"
 # as boot timeout.
 $unitTestSuiteTimeout = 300
 # 60 min should be enough for integration test suites (omitting CTS for now).
-$integrationTestSuiteTimeout = 10800
+$integrationTestSuiteTimeout = 1500
 $instanceBootTimeout = 600
 # The ratio between soft timeout and hard timeout. We're using soft timeouts
 # for the tests, giving them time to clean up and publish results, before

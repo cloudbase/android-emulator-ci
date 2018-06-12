@@ -157,8 +157,13 @@ function run_unit_tests() {
 }
 
 function run_adt_emu_test_suite($testFileName) {
+    $testTimeout = $customTestTimeout[$testFileName]
+    if (! $testTimeout) {
+        $testTimeout = $integrationTestSuiteTimeout
+    }
+
     log_message ("Running adt emulator tests from `"$testFileName`". " +
-                 "Timeout: $integrationTestSuiteTimeout seconds. " +
+                 "Timeout: $testTimeout seconds. " +
                  "Instance boot timeout: $instanceBootTimeout seconds.")
     $emuTestCfgDir = "$scriptLocation\config\emu_test"
     $logFile = Join-Path $adtEmuTestResultDir `
@@ -176,7 +181,7 @@ function run_adt_emu_test_suite($testFileName) {
             "--boot_time=$instanceBootTimeout >> $logFile 2>&1'")
             # --avd_list $testAvdName
     log_message "Executing $cmd"
-    iex_with_timeout $cmd $integrationTestSuiteTimeout
+    iex_with_timeout $cmd $testTimeout
 }
 
 function run_adt_emu_tests() {
