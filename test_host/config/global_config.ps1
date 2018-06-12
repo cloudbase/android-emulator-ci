@@ -65,7 +65,7 @@ $msysBinDir = "C:\msys\1.0\bin"
 # as boot timeout.
 $unitTestSuiteTimeout = 300
 # 60 min should be enough for integration test suites (omitting CTS for now).
-$integrationTestSuiteTimeout = 3600
+$integrationTestSuiteTimeout = 10800
 $instanceBootTimeout = 600
 # The ratio between soft timeout and hard timeout. We're using soft timeouts
 # for the tests, giving them time to clean up and publish results, before
