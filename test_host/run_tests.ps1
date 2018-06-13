@@ -114,14 +114,12 @@ function run_gtests_from_dir($testdir, $resultDir, $pattern,
 
         $isolatedTests = get_isolated_tests $testName $isolatedTestsMapping
         $testFilter = $isolatedTests -join ":"
-        if (! $runIsolatedTests -and $testFilter) {
-            $testFilter = "-$testFilter"
+        if ($runIsolatedTests -and (! $testFilter)) {
+            # No isolated tests for this suite.
+            continue
         }
-        else {
-            if (! $isolatedTests ) {
-                # No isolated tests for this suite.
-                continue
-            }
+        if ((! $runIsolatedTests) -and $testFilter) {
+            $testFilter = "-$testFilter"
         }
 
         try {
