@@ -26,10 +26,14 @@ function extract_unit_tests() {
 }
 
 function prepare_adt_emu_tests() {
+    # TODO: move this to a separate script so that we may run
+    # it when setting up the environment.
     git_clone_pull $adtInfraDir $adtInfraRepoUrl $adtInfraBranch `
                    -shallow $shallowGitClones
     safe_exec "pip install psutil"
     safe_exec "pip install requests"
+    safe_exec "pip install os_testr"
+    safe_exec "pip install python-dateutil"
 
     # The emulator python test modules must be importable.
     add_to_env_path $adtInfraDir -var PYTHONPATH
@@ -104,7 +108,8 @@ function get_isolated_tests($testFileName, $isolatedTestsMapping) {
 function run_gtests_from_dir($testdir, $resultDir, $pattern,
                              $isolatedTestsMapping,
                              $runIsolatedTests,
-                             $testType) {
+                             $testType,
+                             $subunitOutFile) {
     $testList = ls -Recurse $testdir | `
                 ? { $_.Name -match $pattern }
 
@@ -124,8 +129,9 @@ function run_gtests_from_dir($testdir, $resultDir, $pattern,
 
         try {
             notify_starting_test $testName $testType
-            run_gtest $testPath $resultDir `
-                      $unitTestSuiteTimeout $testFilter
+            run_gtest_subunit `
+                $testPath $resultDir $unitTestSuiteTimeout $testFilter `
+                $subunitOutFile
             notify_successful_test $testName $testType
         }
         catch {
@@ -142,7 +148,8 @@ function run_unit_tests() {
                         -pattern "unittests.exe" `
                         -isolatedTestsMapping $isolatedUnitTests `
                         -runIsolatedTests $false `
-                        -testType "unittests"
+                        -testType "unittests" `
+                        -subunitOutFile $unitTestSubunitResults
 
     # Various tests that are known to crash or hang.
     log_message "Running isolated unit tests."
@@ -151,7 +158,11 @@ function run_unit_tests() {
                         -pattern "unittests.exe" `
                         -isolatedTestsMapping $isolatedUnitTests `
                         -runIsolatedTests $true `
-                        -testType "unittests_isolated"
+                        -testType "unittests_isolated" `
+                        -subunitOutFile $unitTestSubunitResults
+
+    generate_subunit_report $unitTestSubunitResults $testResultsDir `
+                            "unittest_results"
 }
 
 function run_adt_emu_test_suite($testFileName) {

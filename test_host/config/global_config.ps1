@@ -33,6 +33,8 @@ $isolatedUnitTests=@{
     "android_emu64_unittests.exe"=`
         @("LazyInstance.MultipleThreads", "OnDemandTest.multiConstruct")}
 
+$unitTestSubunitResults = "$unitTestResultsDir\unittests_subunit"
+
 # Not sure yet if it's safe to use a separate dir.
 $emulatorUnitTestsDir = "$androidEmulatorDir\unittests"
 

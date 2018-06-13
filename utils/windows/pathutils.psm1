@@ -120,6 +120,16 @@ function check_remove_dir($path) {
     }
 }
 
+function check_remove_file($path, $silent=$false) {
+    # Ensure that the specified dir exists and is empty.
+    if (test-path $path) {
+        if (! $silent) {
+            log_message "Removing file: `"$path`"."
+        }
+        rm -force $path
+    }
+}
+
 function extract_zip($src, $dest) {
     # Make sure to use full paths.
     Add-Type -AssemblyName System.IO.Compression.FileSystem

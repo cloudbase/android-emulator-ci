@@ -35,6 +35,7 @@ function _iex_with_timeout() {
         [int]$timeoutSec
     )
 
+    log_message "Executing cmd with timeout ($timeoutSec s): $cmd"
     $job = start-job -ArgumentList $cmd -ScriptBlock {
         param($c)
         iex $c
@@ -66,4 +67,8 @@ function safe_exec($cmd) {
     if ($LASTEXITCODE) {
         throw "Command failed: $cmd"
     }
+}
+
+function get_unix_time () {
+    [int](Get-Date(Get-Date).ToUniversalTime() -uformat "%s")
 }
