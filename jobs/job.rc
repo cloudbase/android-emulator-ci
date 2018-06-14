@@ -65,7 +65,7 @@ ENV EMU_VM_SCRIPTS_DIR "c:\android-emulator-ci"
 
 # It shouldn't take longer than 10 minutes, assuming that the
 # repos are cached.
-ENV CREATE_ENVIRONMENT_TIMEOUT $(( 25 * 60 ))
+ENV CREATE_ENVIRONMENT_TIMEOUT $(( 40 * 60 ))
 ENV JOB_POLL_INTERVAL 5
 
 ENV LOG_SRV "10.100.0.9"
