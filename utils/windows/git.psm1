@@ -8,7 +8,7 @@ function git_clone_pull($path, $url, $ref="master", $shallow=$false)
     log_message "Cloning / pulling: $url, branch: $ref. Path: $path."
 
     pushd .
-    try  
+    try
     {
         if (!(Test-Path -path $path))
         {
