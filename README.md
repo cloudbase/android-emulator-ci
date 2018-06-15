@@ -55,12 +55,18 @@ test run.
 The test results will include XMLs as well as raw console output (from the
 test themselves, as well as emulator instances).
 
-The top dir will contain a few files, each having a list of:
-* executed test suites
-* failed test suites
-* successful test suites
+Each test run will stream the results using the
+[subunit](https://github.com/testing-cabal/subunit/) format, which are then
+aggregated and converted to html.
 
-In the future, we'll look into better ways of aggregating the test results.
+The subunit v2 test streaming protocol has some major benefits, such as:
+* binary format, uses 4K sized event packets, doesn't get corrupted
+  that easily
+* considerable number of parsers
+* easy to aggregate results
+* multiple runners can use the same output file without corrupting it
+* we don't lose test results if the runner gets killed (e.g. after
+  a timeout) or crashes.
 
 Configuration
 =============

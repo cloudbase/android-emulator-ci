@@ -48,7 +48,6 @@ function clear_test_stats() {
 
 function validate_test_run() {
     if ($env:TEST_FAILED -ne "0") {
-        # TODO: We may actually list them.
         throw "One or more test suites have failed"
     }
 
@@ -74,8 +73,6 @@ function notify_failed_test($testDescription, $testType, $errMsg) {
 
     log_message "($testType) $testDescription failed. Error: $errMsg"
 
-    # TODO: keep better track of the failed tests.
-    # We may consider using a JSON.
     echo "($testType) $testDescription" >> $failedTestListFile
     echo $errMsg >> $failedTestListFile
     echo "" >> $failedTestListFile
