@@ -3,7 +3,8 @@
 
 Param(
     [Parameter(Mandatory=$true)]
-    [string]$emulatorUnitTestsArchive
+    [string]$emulatorUnitTestsArchive,
+    [string]$adtEmuEnabledTests
 )
 
 $ErrorActionPreference = "Stop"
@@ -197,7 +198,14 @@ function run_adt_emu_tests() {
     log_message 'Running emulator integration tests from adt_infra.'
     ensure_dir_empty $adtEmuTestResultDir
 
-    foreach ($testFileName in $adtEmuEnabledTests) {
+    if ($adtEmuEnabledTests) {
+        $enabledTests = $adtEmuEnabledTests.Split(",")
+    }
+    else {
+        $enabledTests = $defaultAdtEmuEnabledTests
+    }
+
+    foreach ($testFileName in $enabledTests) {
         try {
             notify_starting_test "$testFileName" "adt_emu_test"
             run_adt_emu_test_suite $testFileName
