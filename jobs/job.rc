@@ -116,4 +116,4 @@ ENV BUILDER_IMAGE_CACHE "1"
 ENV VM_BOOT_TIMEOUT 600
 ENV EMU_VM_REACHABLE_TIMEOUT 180
 
-ENV ADT_EMU_ENABLED_TESTS "test_boot.py,test_console.py,test_ui.py"
+ENV ADT_EMU_ENABLED_TESTS "test_boot,test_console,test_ui"

@@ -167,21 +167,22 @@ function run_unit_tests() {
 }
 
 function run_adt_emu_test_suite($testFileName) {
-    $testTimeout = $customTestTimeout[$testFileName]
+    $testSuiteName = $testFileName.Replace(".py", "")
+    $testTimeout = $customTestTimeout[$testSuiteName]
     if (! $testTimeout) {
         $testTimeout = $integrationTestSuiteTimeout
     }
 
-    log_message ("Running adt emulator tests from `"$testFileName`". " +
+    log_message ("Running adt emulator tests from `"$testSuiteName`". " +
                  "Timeout: $testTimeout seconds. " +
                  "Instance boot timeout: $instanceBootTimeout seconds.")
     $emuTestCfgDir = "$scriptLocation\config\emu_test"
     $logFile = Join-Path $adtEmuTestResultDir `
-                         ($testFileName.Replace(".py", "") + ".log")
+                         ($testSuiteName + ".log")
 
     $cmd = ("cmd /c " +
             "'python `"$adtInfraDir\emu_test\dotest.py`" " +
-            "--file_pattern=`"$testFileName`" " +
+            "--file_pattern=`"$testSuiteName`" " +
             "--skip-adb-perf " +
             "--test_dir=$adtEmuTestResultDir " +
             "--session_dir=$adtEmuTestResultDir " +

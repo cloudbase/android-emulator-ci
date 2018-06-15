@@ -20,10 +20,10 @@ $executedTestListFile = "$testResultDetailsDir\executed_tests.txt"
 $successfulTestListFile = "$testResultDetailsDir\successful_tests.txt"
 # Can't find a better name for those tests at the moment.
 $adtEmuTestResultDir = "$testResultDetailsDir\adt_infra_emu_tests"
-$defaultAdtEmuEnabledTests = @("test_boot.py", "test_console.py", "test_ui.py")
+$defaultAdtEmuEnabledTests = @("test_boot", "test_console", "test_ui")
 # UI tests seem to take quite a while.
-$customTestTimeout=@{"test_ui.py"=10800;
-                     "test_console.py"=1800}
+$customTestTimeout=@{"test_ui"=10800;
+                     "test_console"=1800}
 # Those tests are known to crash (possibly testing features that are
 # unsupported on Windows), we'll isolate them for now.
 $isolatedUnitTests=@{
