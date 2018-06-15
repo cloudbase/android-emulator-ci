@@ -9,20 +9,21 @@ $androidEmulatorBinDir = "$androidEmulatorDir\bin"
 $androidSdkToolsBinDir = "$androidRootDir\sdk\bin"
 
 # $logDir = "$androidRootDir\log"
+
 $testResultsDir = "$androidRootDir\test_results"
-$unitTestResultsDir = "$testResultsDir\unittests"
-$isolatedUnitTestResultsDir = "$testResultsDir\unittests\isolated"
+$testResultDetailsDir = "$testResultsDir\details"
+$unitTestResultsDir = "$testResultDetailsDir\unittests"
+$isolatedUnitTestResultsDir = "$testResultDetailsDir\unittests\isolated"
 # We're going to use a single file providing info about failed tests.
-$failedTestListFile = "$testResultsDir\failed_tests.txt"
-$executedTestListFile = "$testResultsDir\executed_tests.txt"
-$successfulTestListFile = "$testResultsDir\successful_tests.txt"
+$failedTestListFile = "$testResultDetailsDir\failed_tests.txt"
+$executedTestListFile = "$testResultDetailsDir\executed_tests.txt"
+$successfulTestListFile = "$testResultDetailsDir\successful_tests.txt"
 # Can't find a better name for those tests at the moment.
-$adtEmuTestResultDir = "$testResultsDir\adt_infra_emu_tests"
+$adtEmuTestResultDir = "$testResultDetailsDir\adt_infra_emu_tests"
 $defaultAdtEmuEnabledTests = @("test_boot.py", "test_console.py", "test_ui.py")
 # UI tests seem to take quite a while.
 $customTestTimeout=@{"test_ui.py"=10800;
                      "test_console.py"=1800}
-# $adtEmuEnabledTests = @("test_boot.py")
 # Those tests are known to crash (possibly testing features that are
 # unsupported on Windows), we'll isolate them for now.
 $isolatedUnitTests=@{
