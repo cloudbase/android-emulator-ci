@@ -164,7 +164,9 @@ function run_unit_tests() {
 }
 
 function run_adt_emu_test_suite($testFileName) {
+    # For convenience reasons, we won't enforce the extension to be set.
     $testSuiteName = $testFileName.Replace(".py", "")
+    $testFileName = $testSuiteName + ".py"
     $testTimeout = $customTestTimeout[$testSuiteName]
     if (! $testTimeout) {
         $testTimeout = $integrationTestSuiteTimeout
@@ -179,7 +181,7 @@ function run_adt_emu_test_suite($testFileName) {
 
     $cmd = ("cmd /c " +
             "'python `"$adtInfraDir\emu_test\dotest.py`" " +
-            "--file_pattern=`"$testSuiteName`" " +
+            "--file_pattern=`"$testFileName`" " +
             "--skip-adb-perf " +
             "--test_dir=$adtEmuTestResultDir " +
             "--session_dir=$adtEmuTestResultDir " +
@@ -195,7 +197,6 @@ function run_adt_emu_test_suite($testFileName) {
 
 function run_adt_emu_tests() {
     log_message 'Running emulator integration tests from adt_infra.'
-    ensure_dir_empty $adtEmuTestResultDir
 
     if ($adtEmuEnabledTests) {
         $enabledTests = $adtEmuEnabledTests.Split(",")
@@ -224,6 +225,7 @@ function run_adt_emu_tests() {
 rm $failedTestListFile -ErrorAction SilentlyContinue
 ensure_dir_exists $unitTestResultsDir
 ensure_dir_exists $isolatedUnitTestResultsDir
+ensure_dir_exists $adtEmuTestResultDir
 
 extract_unit_tests
 prepare_adt_emu_tests
