@@ -1,3 +1,3 @@
-Device Config,,,,,,,Linux
+Device Config,,,,,,,Windows
 API*,TAG*,ABI*,DEVICE,RAM,GPU,ORI,localhost
 API 26,google_apis,x86,Nexus 5X,2048,swiftshader,mnc,P
