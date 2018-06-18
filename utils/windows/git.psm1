@@ -13,10 +13,10 @@ function git_clone_pull($path, $url, $ref="master", $shallow=$false)
         if (!(Test-Path -path $path))
         {
             if ($shallow) {
-                safe_exec "git clone -b $ref $url $path --depth=1"
+                safe_exec "git clone -q -b $ref $url $path --depth=1"
             }
             else {
-                safe_exec "git clone $url $path"
+                safe_exec "git clone -q $url $path"
             }
 
             cd $path

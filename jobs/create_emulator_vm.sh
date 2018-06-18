@@ -33,7 +33,7 @@ log_summary "Setting UTC timezone."
 ps_emu_vm "set-timezone -id utc"
 
 log_summary "Cloning CI scripts."
-ps_emu_vm "git clone $CI_GIT_REPO $EMU_VM_SCRIPTS_DIR"
+ps_emu_vm "git clone -q $CI_GIT_REPO $EMU_VM_SCRIPTS_DIR"
 
 log_summary "Validating emulator vm prerequisites."
 start_emu_vm_job "check_prerequisites"
