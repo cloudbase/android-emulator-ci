@@ -189,6 +189,7 @@ function run_adt_emu_test_suite($testFileName) {
             "--buildername=`"localhost`" " +
             "--timeout=$($integrationTestSuiteTimeout * $softTimeoutRatio) " +
             "--subunit-file=$adtTestSubunitResults " +
+            "--as-win32-job " +
             "--boot_time=$instanceBootTimeout >> $logFile 2>&1'")
             # --avd_list $testAvdName
     log_message "Executing $cmd"
