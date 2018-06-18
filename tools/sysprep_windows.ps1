@@ -11,8 +11,24 @@ function clear_eventlog ()
     Get-EventLog -List
 }
 
-rm -Recurse -Force "$cbsInitLogDir\*"
+function cleanup_cbsinit () {
+    get-service cloudbase* | stop-service
+    rm -Recurse -Force "$cbsInitLogDir\*"
+}
+
+function remove_unneeded_apps () {
+    # Some pre-installed games may prevent us from doing the sysprep.
+    $apps = Get-AppxPackage -AllUsers `
+        | ?  {$_.Name -notmatch "microsoft|windows|-|InputApp"}
+    $apps += Get-AppxPackage -AllUsers | ? {$_.Name -match "bing" }
+
+    $apps | % { echo "Removing $_.Name"; Remove-AppxPackage -AllUsers $_ }
+}
+
+
 clear_eventlog
+remove_unneeded_apps
+
 ipconfig /release
 
 C:\Windows\System32\Sysprep\sysprep.exe `
