@@ -222,7 +222,6 @@ function run_adt_emu_tests() {
 }
 
 
-rm $failedTestListFile -ErrorAction SilentlyContinue
 ensure_dir_exists $unitTestResultsDir
 ensure_dir_exists $isolatedUnitTestResultsDir
 ensure_dir_exists $adtEmuTestResultDir
