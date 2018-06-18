@@ -214,9 +214,12 @@ public class JobMgr
 "@
 
 
-function run_as_job($jobName=[guid]::NewGuid().Guid) {
+function run_as_job($jobName) {
     # This will ensure that this process's children will be part of the same
     # job object, being stopped along with it when it exits.
+    if (! $jobName) {
+        $jobName = [guid]::NewGuid().Guid
+    }
     Add-Type -TypeDefinition $JobMgrDefinition
 
     $mgr = New-Object JobMgr
