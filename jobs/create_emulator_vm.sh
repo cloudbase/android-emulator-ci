@@ -29,6 +29,9 @@ log_summary "Waiting for emulator vm to be reachable."
 exec_with_retry "ps_emu_vm whoami" \
                 $(( EMU_VM_REACHABLE_TIMEOUT / 5 )) 5
 
+log_summary "Setting UTC timezone."
+ps_emu_vm "set-timezone -id utc"
+
 log_summary "Cloning CI scripts."
 ps_emu_vm "git clone $CI_GIT_REPO $EMU_VM_SCRIPTS_DIR"
 

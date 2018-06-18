@@ -9,8 +9,12 @@ $scriptLocation = [System.IO.Path]::GetDirectoryName(
 # TODO: drop this.
 . "$scriptLocation\..\..\test_host\config\global_config.ps1"
 
+function get_utc_iso8601_time() {
+    Get-Date(Get-Date).ToUniversalTime() -uformat '+%Y-%m-%dT%H:%M:%S.000Z'
+}
+
 function log_message($message) {
-    echo "[$(Get-Date)] $message"
+    echo "[$(get_utc_iso8601_time)] $message"
 }
 
 function iex_with_timeout() {

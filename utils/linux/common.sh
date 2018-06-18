@@ -11,7 +11,7 @@ function log_message () {
 
     [[ $LOG_SCRIPT_NAME ]] && SCRIPT_NAME=" ($(basename $0))"
 
-    local MSG=[$(date "+$TIMESTAMP_FORMAT")]
+    local MSG=[$(date -uIseconds)]
     MSG="$MSG$SCRIPT_NAME"
     MSG="$MSG $@"
 
