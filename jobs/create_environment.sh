@@ -84,6 +84,7 @@ if str_to_bool $SKIP_BUILD && [ -z $PREBUILT_EMULATOR_ARCHIVE_URL ]; then
                 "emulator will be used instead."
 else
     LOG_SCRIPT_NAME=1 $SCRIPT_DIR/install_emulator.sh
+fi
 
 log_summary "Finished creating test environment."
 
