@@ -83,7 +83,7 @@ source $JOB_STATE_RC
 
 if str_to_bool $SKIP_BUILD && [ -z $PREBUILT_EMULATOR_ARCHIVE_URL ]; then
     log_summary "WARNING: The emulator build was skipped yet no" \
-                "emulator archive was specified. The upstream " \
+                "emulator archive was specified. The upstream" \
                 "emulator will be used instead."
 else
     LOG_SCRIPT_NAME=1 $SCRIPT_DIR/install_emulator.sh
