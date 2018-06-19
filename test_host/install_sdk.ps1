@@ -85,8 +85,16 @@ install_sdk_packages
 # Some of the emulator tests require those to be set in %PATH%.
 # We'll take care of it at this stage.
 add_to_env_path "$androidPlatformToolsDir"
-add_to_env_path "$androidSdkToolsBinDir"
+add_to_env_path "$sdkTools"
 add_to_env_path "$androidEmulatorBinDir"
+add_to_env_path "$androidEmulatorDir"
+
+set_android_emulator_feature "WindowsHypervisorPlatform" "on"
 
 # Some quick sanity checks, validating the sdk executables.
 ensure_binary_available "adb"
+# At this point, we have the upstream emulator installed, which
+# anyway is marked as a dependency of the other sdk packages.
+# We'll replace it with our build at a subsequent stage.
+ensure_binary_available "emulator"
+ensure_binary_available "sdkmanager"

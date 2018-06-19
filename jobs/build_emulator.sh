@@ -10,6 +10,11 @@ source "$SCRIPT_DIR/utils.sh"
 
 setup_logging $JOB_LOG_DIR
 
+if str_to_bool $SKIP_BUILD; then
+    log_summary "Skipped building the emulator."
+    exit 0
+fi
+
 log_summary "Spawning builder vm: $BUILDER_VM_NAME."
 
 BUILDER_VM_ID=$(boot_vm \

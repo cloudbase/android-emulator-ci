@@ -1,6 +1,9 @@
 platforms;android-26
 system-images;android-26;google_apis;x86
 platform-tools
+# The emulator will anyway be a dependency of the above
+# packages. We'll replace it with our build, if specified.
+emulator
 
 # add-ons;addon-google_apis-google-24 ?
 # build-tools;26.0.3

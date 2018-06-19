@@ -42,9 +42,6 @@ check_prerequisites
 # Also, by having this step decoupled, we may install the SDK
 # while waiting for the actual emulator to build.
 extract_emulator_archive
-set_android_emulator_feature "WindowsHypervisorPlatform" "on"
-
-add_to_env_path "$androidEmulatorDir"
 
 ensure_binary_available "emulator"
 

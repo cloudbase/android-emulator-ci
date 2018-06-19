@@ -6,7 +6,6 @@ $androidEmulatorDir = "$androidSdkRoot\emulator"
 $androidUserAdvancedFeatures = "$androidEmulatorHome\advancedFeatures.ini"
 $androidPlatformToolsDir = "$androidSdkRoot\platform-tools"
 $androidEmulatorBinDir = "$androidEmulatorDir\bin"
-$androidSdkToolsBinDir = "$androidRootDir\sdk\bin"
 
 # $logDir = "$androidRootDir\log"
 

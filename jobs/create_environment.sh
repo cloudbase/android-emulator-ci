@@ -78,17 +78,12 @@ fi
 # among others.
 source $JOB_STATE_RC
 
-log_summary "Transfering the emulator archive."
-ps_emu_vm "Invoke-WebRequest -Uri $EMULATOR_ARCHIVE_URL" \
-          "-OutFile $EMU_VM_EMULATOR_ARCH_PATH"
-
-log_summary "Transfering the unittests archive."
-ps_emu_vm "Invoke-WebRequest -Uri $UNITTESTS_ARCHIVE_URL" \
-          "-OutFile $EMU_VM_UNITTESTS_ARCH_PATH"
-
-log_summary "Installing the emulator."
-start_emu_vm_job "install_emulator" \
-                 "-androidEmulatorArchive $EMU_VM_EMULATOR_ARCH_PATH"
+if str_to_bool $SKIP_BUILD && [ -z $PREBUILT_EMULATOR_ARCHIVE_URL ]; then
+    log_summary "WARNING: The emulator build was skipped yet no" \
+                "emulator archive was specified. The upstream " \
+                "emulator will be used instead."
+else
+    LOG_SCRIPT_NAME=1 $SCRIPT_DIR/install_emulator.sh
 
 log_summary "Finished creating test environment."
 
