@@ -12,6 +12,7 @@ setup_logging $JOB_LOG_DIR
 
 if str_to_bool $SKIP_TESTS; then
     log_summary "Skipped running the tests."
+    mark_job_completed "run_tests"
     exit 0
 fi
 

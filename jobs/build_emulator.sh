@@ -12,6 +12,7 @@ setup_logging $JOB_LOG_DIR
 
 if str_to_bool $SKIP_BUILD; then
     log_summary "Skipped building the emulator."
+    mark_job_completed "build_emulator"
     exit 0
 fi
 
