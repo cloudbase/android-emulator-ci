@@ -12,6 +12,9 @@ setup_logging $JOB_LOG_DIR
 
 log_git_info
 
+log_summary "Prebuilt emulator archive url: $PREBUILT_EMULATOR_ARCHIVE_URL"
+log_summary "Prebuilt unit tests url: $PREBUILT_ARCHIVE_URL"
+
 log_summary "Starting emulator build job."
 LOG_SCRIPT_NAME=1 nohup $SCRIPT_DIR/build_emulator.sh &
 pid_build_job=$!
