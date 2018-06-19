@@ -28,6 +28,7 @@ function wait_for_instance_state () {
     done
 
     if [[ ${INSTANCE_STATE^^} =~ "ERROR" ]]; then
+        nova show $INSTANCE_ID
         log_summary "Instance $INSTANCE_ID entered error state"\
                     "($INSTANCE_STATE)."
         return 1
