@@ -150,7 +150,7 @@ function log_git_info () {
 
     git status
     git remote -v
-    git log -n 5 --oneline
+    git log -n 10 --oneline
 
     popd
 }

@@ -78,6 +78,8 @@ function build_emulator () {
     BUILD_ARGS="$BUILD_ARGS --revision=$PKG_REVISION"
 
     pushd $AOSP_DIR/external/qemu
+    log_git_info
+
     time android/scripts/package-release.sh $BUILD_ARGS
 
     OUT_PACKAGES=$(find $TMP_PKG_DIR -type f)
