@@ -5,6 +5,10 @@ This repository contains scripts that are used for provinding a CI test
 infrastructure, covering Android Emulator, with a specific interest in the
 WHPX (Windows Hypervisor Platform) accelerator.
 
+While the main goal is automating Android Emulator tests, those jobs can also
+be used to set up development/testing environments really quick, in less than
+10 minutes.
+
 Workflow
 ========
 For each test run, we're rebuilding the emulator (currently using the tip of
@@ -23,7 +27,9 @@ provisioned and the Android SDK gets installed. The AOSP tree is cached on the
 builder VM image, also containing ccache output from a previous run.
 
 This way, we get a test environment up in less than 15 minutes (which can
-also be used for dev/testing purposes).
+also be used for dev/testing purposes). We also support reusing previous
+builds, in which case it takes less than 10 minutes to spin up the
+environment.
 
 The logs, test results along with build packages are pushed to a configured
 log server.
