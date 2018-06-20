@@ -79,6 +79,7 @@ def _parse_command(command, powershell):
         command = " ".join([six.text_type(c) for c in command])
 
     if powershell:
+        command = "$ProgressPreference = \"SilentlyContinue\"; " + command
         b64_command = base64.b64encode(command.encode("utf_16_le"))
         command = ("powershell.exe -ExecutionPolicy RemoteSigned "
                    "-NonInteractive -EncodedCommand %s" % b64_command)
