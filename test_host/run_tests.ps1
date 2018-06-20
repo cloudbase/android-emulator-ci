@@ -192,7 +192,6 @@ function run_adt_emu_test_suite($testFileName) {
             "--as-win32-job " +
             "--boot_time=$instanceBootTimeout >> $logFile 2>&1'")
             # --avd_list $testAvdName
-    log_message "Executing $cmd"
     iex_with_timeout $cmd $testTimeout
 }
 
@@ -200,7 +199,11 @@ function run_adt_emu_tests() {
     log_message 'Running emulator integration tests from adt_infra.'
 
     if ($adtEmuEnabledTests) {
-        $enabledTests = $adtEmuEnabledTests.Split(",")
+        $enabledTests = $adtEmuEnabledTests.Trim(",").Split(",")
+        if (! $enabledTests -or $enabledTests -eq "None") {
+            log_message "Integration tests are disabled."
+            return
+        }
     }
     else {
         $enabledTests = $defaultAdtEmuEnabledTests
