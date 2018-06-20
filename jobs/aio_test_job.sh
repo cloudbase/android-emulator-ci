@@ -26,10 +26,10 @@ function cleanup_environment () {
     $SCRIPT_DIR/cleanup_environment.sh
 }
 
-TESTS_PASSED=0
+EXIT_CODE=1
 
-create_environment && run_tests && TESTS_PASSED=1
-collect_logs
-cleanup_environment
+create_environment && run_tests && EXIT_CODE=0
+collect_logs || EXIT_CODE=1
+cleanup_environment || EXIT_CODE=1
 
-exit $TESTS_PASSED
+exit $EXIT_CODE
