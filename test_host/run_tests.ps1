@@ -42,8 +42,6 @@ function prepare_adt_emu_tests() {
 
 function clear_test_stats() {
     $env:TEST_FAILED = "0"
-    echo "" > $failedTestListFile
-    echo "" > $executedTestListFile
 }
 
 function validate_test_run() {
@@ -56,14 +54,10 @@ function validate_test_run() {
 
 function notify_starting_test($testDescription, $testType) {
     log_message "Running test: ($testType) $testDescription."
-
-    echo "($testType) $testDescription" >> $executedTestListFile
 }
 
 function notify_successful_test($testDescription, $testType) {
     log_message "($testType) $testDescription passed."
-
-    echo "($testType) $testDescription" >> $successfulTestListFile
 }
 
 function notify_failed_test($testDescription, $testType, $errMsg) {
@@ -72,10 +66,6 @@ function notify_failed_test($testDescription, $testType, $errMsg) {
     $env:TEST_FAILED = "1"
 
     log_message "($testType) $testDescription failed. Error: $errMsg"
-
-    echo "($testType) $testDescription" >> $failedTestListFile
-    echo $errMsg >> $failedTestListFile
-    echo "" >> $failedTestListFile
 }
 
 function prepare_lib_paths() {

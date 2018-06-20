@@ -13,10 +13,6 @@ $testResultsDir = "$androidRootDir\test_results"
 $testResultDetailsDir = "$testResultsDir\details"
 $unitTestResultsDir = "$testResultDetailsDir\unittests"
 $isolatedUnitTestResultsDir = "$testResultDetailsDir\unittests\isolated"
-# We're going to use a single file providing info about failed tests.
-$failedTestListFile = "$testResultDetailsDir\failed_tests.txt"
-$executedTestListFile = "$testResultDetailsDir\executed_tests.txt"
-$successfulTestListFile = "$testResultDetailsDir\successful_tests.txt"
 # Can't find a better name for those tests at the moment.
 $adtEmuTestResultDir = "$testResultDetailsDir\adt_infra_emu_tests"
 $defaultAdtEmuEnabledTests = @("test_boot", "test_console", "test_ui")
