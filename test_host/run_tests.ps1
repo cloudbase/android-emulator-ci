@@ -4,7 +4,7 @@
 Param(
     [Parameter(Mandatory=$true)]
     [string]$emulatorUnitTestsArchive,
-    [string]$adtEmuEnabledTests
+    [string]$enabledFunctionalTests
 )
 
 $ErrorActionPreference = "Stop"
@@ -26,7 +26,7 @@ function extract_unit_tests() {
            -C (convert_to_msys_path $emulatorUnitTestsDir)
 }
 
-function prepare_adt_emu_tests() {
+function prepare_functional_tests() {
     # TODO: move this to a separate script so that we may run
     # it when setting up the environment.
     git_clone_pull $adtInfraDir $adtInfraRepoUrl $adtInfraBranch `
@@ -153,80 +153,80 @@ function run_unit_tests() {
                             "unittest_results"
 }
 
-function run_adt_emu_test_suite($testFileName) {
+function run_functional_test_suite($testFileName) {
     # For convenience reasons, we won't enforce the extension to be set.
     $testSuiteName = $testFileName.Replace(".py", "")
     $testFileName = $testSuiteName + ".py"
     $testTimeout = $customTestTimeout[$testSuiteName]
     if (! $testTimeout) {
-        $testTimeout = $integrationTestSuiteTimeout
+        $testTimeout = $functionalTestSuiteTimeout
     }
 
-    log_message ("Running adt emulator tests from `"$testSuiteName`". " +
+    log_message ("Running functional emulator tests from `"$testSuiteName`". " +
                  "Timeout: $testTimeout seconds. " +
                  "Instance boot timeout: $instanceBootTimeout seconds.")
     $emuTestCfgDir = "$scriptLocation\config\emu_test"
-    $logFile = Join-Path $adtEmuTestResultDir `
+    $logFile = Join-Path $functionalTestResultDir `
                          ($testSuiteName + ".log")
 
     $cmd = ("cmd /c " +
             "'python `"$adtInfraDir\emu_test\dotest.py`" " +
             "--file_pattern=`"$testFileName`" " +
             "--skip-adb-perf " +
-            "--test_dir=$adtEmuTestResultDir " +
-            "--session_dir=$adtEmuTestResultDir " +
+            "--test_dir=$functionalTestResultDir " +
+            "--session_dir=$functionalTestResultDir " +
             "--config_file=`"$emuTestCfgDir\test_cfg.csv`" " +
             "--buildername=`"localhost`" " +
-            "--timeout=$($integrationTestSuiteTimeout * $softTimeoutRatio) " +
-            "--subunit-file=$adtTestSubunitResults " +
+            "--timeout=$($functionalTestSuiteTimeout * $softTimeoutRatio) " +
+            "--subunit-file=$functionalSubunitResults " +
             "--as-win32-job " +
             "--boot_time=$instanceBootTimeout >> $logFile 2>&1'")
             # --avd_list $testAvdName
     iex_with_timeout $cmd $testTimeout
 }
 
-function run_adt_emu_tests() {
-    log_message 'Running emulator integration tests from adt_infra.'
+function run_functional_tests() {
+    log_message 'Running emulator functional tests from adt_infra.'
 
-    if ($adtEmuEnabledTests) {
-        $enabledTests = $adtEmuEnabledTests.Trim(",").Split(",")
+    if ($enabledFunctionalTests) {
+        $enabledTests = $enabledFunctionalTests.Trim(",").Split(",")
         if (! $enabledTests -or $enabledTests -eq "None") {
-            log_message "Integration tests are disabled."
+            log_message "functional tests are disabled."
             return
         }
     }
     else {
-        $enabledTests = $defaultAdtEmuEnabledTests
+        $enabledTests = $defaultEnabledFunctionalTests
     }
 
     foreach ($testFileName in $enabledTests) {
         try {
-            notify_starting_test "$testFileName" "adt_emu_test"
-            run_adt_emu_test_suite $testFileName
-            notify_successful_test "$testFileName" "adt_emu_test"
+            notify_starting_test "$testFileName" "functional_test"
+            run_functional_test_suite $testFileName
+            notify_successful_test "$testFileName" "functional_test"
         }
         catch {
             $errMsg = $_.Exception.Message
-            notify_failed_test "$testFileName" "adt_emu_test" $errMsg
+            notify_failed_test "$testFileName" "functional_test" $errMsg
         }
     }
 
-    generate_subunit_report $adtTestSubunitResults $testResultsDir `
-                            "integration_test_results"
+    generate_subunit_report $functionalSubunitResults $testResultsDir `
+                            "functional_test_results"
 }
 
 
 ensure_dir_exists $unitTestResultsDir
 ensure_dir_exists $isolatedUnitTestResultsDir
-ensure_dir_exists $adtEmuTestResultDir
+ensure_dir_exists $functionalTestResultDir
 
 extract_unit_tests
-prepare_adt_emu_tests
+prepare_functional_tests
 prepare_lib_paths
 
 clear_test_stats
 
 run_unit_tests
-run_adt_emu_tests
+run_functional_tests
 
 validate_test_run

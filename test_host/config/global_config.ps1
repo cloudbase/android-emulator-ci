@@ -11,11 +11,10 @@ $androidEmulatorBinDir = "$androidEmulatorDir\bin"
 
 $testResultsDir = "$androidRootDir\test_results"
 $testResultDetailsDir = "$testResultsDir\details"
-$unitTestResultsDir = "$testResultDetailsDir\unittests"
-$isolatedUnitTestResultsDir = "$testResultDetailsDir\unittests\isolated"
-# Can't find a better name for those tests at the moment.
-$adtEmuTestResultDir = "$testResultDetailsDir\adt_infra_emu_tests"
-$defaultAdtEmuEnabledTests = @("test_boot", "test_console", "test_ui")
+$unitTestResultsDir = "$testResultDetailsDir\unit_tests"
+$isolatedUnitTestResultsDir = "$unitTestResultsDir\isolated"
+$functionalTestResultDir = "$testResultDetailsDir\functional_tests"
+$defaultEnabledFunctionalTests = @("test_boot", "test_console", "test_ui")
 # UI tests seem to take quite a while.
 $customTestTimeout=@{"test_ui"=10800;
                      "test_console"=1800}
@@ -29,8 +28,9 @@ $isolatedUnitTests=@{
     "android_emu64_unittests.exe"=`
         @("LazyInstance.MultipleThreads", "OnDemandTest.multiConstruct")}
 
-$unitTestSubunitResults = "$unitTestResultsDir\unittests_subunit"
-$adtTestSubunitResults = "$adtEmuTestResultDir\adttests_subunit"
+$unitTestSubunitResults = "$unitTestResultsDir\unit_tests_subunit"
+$functionalSubunitResults = `
+    "$functionalTestResultDir\functional_tests_subunit"
 
 # Not sure yet if it's safe to use a separate dir.
 $emulatorUnitTestsDir = "$androidEmulatorDir\unittests"
@@ -63,11 +63,11 @@ $msysBinDir = "C:\msys\1.0\bin"
 # The timeout to use per unit test suite.
 # 5 minutes seem reasonable for now.
 # Unfortunately, this option doesn't seem to be used properly by the
-# emulator integration tests, using the global "--timeout" value
+# emulator functional tests, using the global "--timeout" value
 # as boot timeout.
 $unitTestSuiteTimeout = 300
-# 60 min should be enough for integration test suites (omitting CTS for now).
-$integrationTestSuiteTimeout = 1500
+# 60 min should be enough for functional test suites (omitting CTS for now).
+$functionalTestSuiteTimeout = 1500
 $instanceBootTimeout = 600
 # The ratio between soft timeout and hard timeout. We're using soft timeouts
 # for the tests, giving them time to clean up and publish results, before

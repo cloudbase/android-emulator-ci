@@ -48,7 +48,7 @@ useful for debugging purposes).
 Performed tests
 ===============
 We're running the in-tree android emulator unit tests, along with the
-integration tests from
+functional tests from
 [adt-infra](https://android.googlesource.com/platform/external/adt-infra/emu_tests).
 
 Some unit tests that are known to be crashing or hanging are run isolated
