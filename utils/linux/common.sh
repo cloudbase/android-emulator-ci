@@ -146,11 +146,13 @@ function str_to_bool () {
 }
 
 function log_git_info () {
-    pushd $basedir_utils
-
     git status
     git remote -v
-    git log -n 10 --oneline
+    git log --oneline -n 10 --format="%h %cI %s"
+}
 
+function log_ci_scripts_git_info() {
+    pushd $basedir_utils
+    log_git_info
     popd
 }

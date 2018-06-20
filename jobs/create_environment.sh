@@ -10,7 +10,7 @@ source "$SCRIPT_DIR/utils.sh"
 
 setup_logging $JOB_LOG_DIR
 
-log_git_info
+log_ci_scripts_git_info
 
 log_summary "Prebuilt emulator archive url: $PREBUILT_EMULATOR_ARCHIVE_URL"
 log_summary "Prebuilt unit tests url: $PREBUILT_ARCHIVE_URL"
