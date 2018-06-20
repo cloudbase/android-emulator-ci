@@ -53,6 +53,16 @@ function sync_aosp_tree () {
     popd
 }
 
+function apply_emulator_patch () {
+    local GERRIT_REFSPEC="$GERRIT_CHANGE_NUMBER/$GERRIT_PATCHSET_NUMBER"
+
+    log_summary "Applying patch $GERRIT_REFSPEC."
+
+    pushd $AOSP_DIR/external/qemu
+    repo download platform/external/qemu $GERRIT_REFSPEC
+    popd
+}
+
 function ensure_ccache_dir () {
     if [ ! -z $CCACHE_DIR ]; then
         mkdir -p $CCACHE_DIR
@@ -143,6 +153,12 @@ if [[ $SKIP_SYNC_AOSP == "1" ]]; then
     log_summary "Skipped syncing AOSP tree."
 else
     sync_aosp_tree
+fi
+
+if [ -z $GERRIT_CHANGE_NUMBER ] || [ -z $GERRIT_PATCHSET_NUMBER ]; then
+    log_summary "Missing gerrit change/patchset. No patch to apply."
+else
+    apply_emulator_patch
 fi
 
 if [[ $SKIP_BUILD == "1" ]]; then

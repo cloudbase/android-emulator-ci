@@ -44,6 +44,8 @@ ssh_builder_vm "git clone -q $CI_GIT_REPO $BUILDER_VM_SCRIPTS_DIR"
 emulator_build_failed=""
 log_summary "Building the emulator."
 ssh_builder_vm "SKIP_DEPS=$BUILDER_IMAGE_CACHE" \
+               "GERRIT_CHANGE_NUMBER=$GERRIT_CHANGE_NUMBER" \
+               "GERRIT_PATCHSET_NUMBER=$GERRIT_PATCHSET_NUMBER" \
                "$BUILDER_VM_SCRIPTS_DIR/build_host/build_emulator.sh" \
                || emulator_build_failed="1"
 
