@@ -24,6 +24,8 @@ parser.add_argument('--stop-time',
 parser.add_argument('--stdin-attachment', action='store_true',
                     help='Read the attachment from stdin.')
 parser.set_defaults(stdin_attachment=False)
+parser.add_argument('--attachment-path',
+                    help="Pass an attachment file path.")
 parser.add_argument('--attachment-string',
                     help='Pass a string record attachment.')
 parser.add_argument('--output-file',
@@ -57,6 +59,10 @@ try:
     attachment = six.b(args.attachment_string or "") + b"\n"
     if args.stdin_attachment:
         attachment += sys.stdin.read()
+
+    if args.attachment_path:
+        with open(args.attachment_path, 'rb') as f:
+            attachment += f.read()
 
     output = subunit.v2.StreamResultToBytes(output_handle)
     output.startTestRun()

@@ -4,24 +4,34 @@ $scriptLocation = [System.IO.Path]::GetDirectoryName(
 . "$scriptLocation\common.ps1"
 
 function add_subunit_result($outputFile, $testName, $result, $startTime,
-                            $stopTime, $details) {
-    echo $details | `
-        python "$scriptLocation\..\common\publish_subunit_result.py" `
+                            $stopTime, $details, $attachedFile) {
+    $tempFile = [System.IO.Path]::GetTempFileName()
+
+    cmd /c "echo $details >> $tempFile"
+    cmd /c "echo '' >> $tempFile"
+    if ($attachedFile) {
+        # CMD 'type' properly handles binary files, unlike PS.
+        cmd /c "type $attachedFile >> $tempFile"
+    }
+
+    python "$scriptLocation\..\common\publish_subunit_result.py" `
         --test-id=$testName --status=$result --start-time=$startTime `
         --stop-time $stopTime --output-file=$outputFile `
-        --stdin-attachment
+        --attachment-path $tempFile
+
+    check_remove_file $tempFile -silent $true
 }
 
 function add_subunit_failure($outputFile, $testName, $startTime,
-                             $stopTime, $details) {
+                             $stopTime, $details, $attachedFile) {
     add_subunit_result $outputFile $testName "fail" $startTime `
-                       $stopTime $details
+                       $stopTime $details $attachedFile
 }
 
 function add_subunit_success($outputFile, $testName, $startTime,
-                             $stopTime, $details) {
+                             $stopTime, $details, $attachedFile) {
     add_subunit_result $outputFile $testName "success" $startTime `
-                       $stopTime $details
+                       $stopTime $details $attachedFile
 }
 
 function gtest2subunit($xmlPath, $subunitPath, $testPrefix) {
@@ -64,6 +74,7 @@ function run_gtest_subunit($binPath, $resultDir, $timeout=-1, $testFilter,
                            $subunitOutputPath) {
     $binName = (split-path -leaf $binPath) -replace ".exe$",""
     $xmlOutputPath = join-path $resultDir ($binName + "_results.xml")
+    $consoleOutputPath = join-path $resultDir ($binName + "_results.log")
 
     $startTime = get_unix_time
     try {
@@ -82,10 +93,9 @@ function run_gtest_subunit($binPath, $resultDir, $timeout=-1, $testFilter,
             if (! $errMsg ) {
                 $errMsg = "Missing output xml."
             }
-            # TODO: we may want to include the stdout as well.
             add_subunit_failure $subunitOutputPath $binName `
                                 $startTime $stopTime `
-                                $errMsg
+                                $errMsg $consoleOutputPath
         }
     }
 }
