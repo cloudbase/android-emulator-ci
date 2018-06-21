@@ -41,7 +41,10 @@ if [[ -z $EMU_VM_IP ]]; then
     log_summary "Missing emulator vm ip. Skipped collecting emulator" \
                 "vm logs."
 else
-    prepare_emu_vm_shares
+    # This is highly likely to happen if the job fails early,
+    # before the emulator VM boots.
+    prepare_emu_vm_shares || \
+        log_summary "Failed to prepare emulator VM shares."
 fi
 
 log_summary "Preparing log server packages dir."
@@ -54,6 +57,9 @@ scp_log_srv -r \
 
 if [[ ! -z $EMU_VM_IP ]]; then
     log_summary "Transfering test results to log server."
+
+    # Ensuring that the mountpoint exists, even if the mount failed.
+    mkdir -p $JOB_EMU_VM_RESULTS_DIR
     scp_log_srv -r \
                 "$JOB_EMU_VM_RESULTS_DIR" \
                 "$LOG_SRV_USERNAME@$LOG_SRV:$LOG_SRV_JOB_RESULTS_DIR"
