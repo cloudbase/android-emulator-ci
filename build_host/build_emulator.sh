@@ -154,6 +154,8 @@ else
     install_deps
 fi
 
+set_git_ci_creds
+
 if [[ $SKIP_SYNC_AOSP == "1" ]]; then
     log_summary "Skipped syncing AOSP tree."
 else

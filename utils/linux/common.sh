@@ -156,3 +156,10 @@ function log_ci_scripts_git_info() {
     log_git_info
     popd
 }
+
+function set_git_ci_creds () {
+    # We may have to cherry pick some patches, in which case those
+    # creds need to be set.
+    git config --global user.email "android-ci@cloudbasesolutions.com"
+    git config --global user.name "Android Cloudbase CI"
+}
