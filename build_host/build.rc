@@ -29,4 +29,4 @@ ENV GERRIT_PATCHSET_NUMBER "1"
 
 # We'll leave the default build args here, making them easy to override.
 ENV ANDROID_BUILD_ARGS "--host=windows-x86_64,windows-x86 \
-                        --no-tests --verbosity=2"
+                        --no-tests --verbosity=2 --min-build"

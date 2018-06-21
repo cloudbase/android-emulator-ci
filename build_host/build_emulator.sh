@@ -90,6 +90,11 @@ function build_emulator () {
     pushd $AOSP_DIR/external/qemu
     log_git_info
 
+    # TODO: Drop this once it merges upstream. We need it in order
+    # to do x86/x64 only builds.
+    git fetch https://android.googlesource.com/platform/external/qemu \
+              refs/changes/45/708045/1 && git cherry-pick FETCH_HEAD
+
     time android/scripts/package-release.sh $BUILD_ARGS
 
     OUT_PACKAGES=$(find $TMP_PKG_DIR -type f)
