@@ -54,7 +54,7 @@ ENV VM_SSL_KEY_PATH `realpath ~/.ssl/ssl_winrm.key`
 ENV VM_SSH_KEY `realpath ~/.ssh/id_rsa`
 ENV LOG_SRV_KEY `realpath ~/.ssh/id_rsa`
 
-ENV CI_GIT_REPO "https://github.com/petrutlucian94/android-emulator-ci"
+ENV CI_GIT_REPO "https://github.com/cloudbase/android-emulator-ci"
 
 ENV BUILDER_VM_USERNAME "ubuntu"
 ENV EMU_VM_USERNAME "Admin"
